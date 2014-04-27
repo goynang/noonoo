@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title><%= page.title %></title>
+	<link rel="stylesheet" href="/css/editor.css">
+	
+	<meta name="revision" content="<%= page._rev %>">
+</head>
+<body>
+<%= yield %>
+
+<script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+<script src="/js/editor.js"></script>
+<script src="/js/editor-plugins.js"></script>
+<script>
+$(function () {
+	
+	function savePage() {
+		var page = {};
+		page['_id'] = window.location.pathname;
+		page['title'] = document.title;
+		page['content'] = {};
+		page['_rev'] = $('meta[name=revision]').attr("content");
+		$('.zone').each(function(zone_index, zoneElement) {
+			var zone = [];
+			$(zoneElement).find('.component').each(function(component_index, componentElement) {
+				var component = {};
+				component.name = $(componentElement).attr('data-type');
+				// TODO: Work out how to access per component config/content here (via some kind of IOC stuff)
+				component.content = $(componentElement).html();
+				zone.push(component);
+			});
+			page.content[$(zoneElement).attr('id')] =  zone;
+		});
+		$.post( "/save", { 'page' : JSON.stringify(page) }, "json" ).done(function( data ) {
+			$("meta[name='revision']").attr("content", data.rev);
+			console.log("Data saved: " + data['rev'] );
+  	  	});
+	}
+
+	var editor = new MediumEditor('.component');
+
+	$('.component').mediumInsert({
+		editor: editor
+	});
+	
+	$('.component').on('input', function() {
+	  savePage();
+	});
+
+});
+</script>
+</body>
+</html>
+
+
+
