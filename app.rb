@@ -4,7 +4,7 @@ require 'rest_client'
 require 'json'
 require 'ostruct'
 
-DB_URL = 'http://localhost:5984/testy'
+DB_URL = ENV['CLOUDANT_URL'] ? "#{ENV['CLOUDANT_URL']}/noonoo" : 'http://localhost:5984/testy'
 
 get '/' do
   "Hello World!"
