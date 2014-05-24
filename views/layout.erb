@@ -2,20 +2,190 @@
 <html>
 <head>
 	<title><%= page.title %></title>
-	<link rel="stylesheet" href="/css/editor.css">
+	
+	<link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+	<link rel="stylesheet" href="/css/cms.css">
+	<link rel="stylesheet" href="/vendor/medium-editor.min.css">
 	
 	<meta name="revision" content="<%= page._rev %>">
 </head>
 <body>
+
 <%= yield %>
 
-<script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
-<script src="/js/editor.js"></script>
-<script src="/js/editor-plugins.js"></script>
-<script>
-$(function () {
+<div id="cms_ui">
+	<form id="cms_global_panel">
+		<fieldset class="active">
+			<legend><span>Page</span></legend>
+			
+			<div>
+				<p>Page panel</p>
+			</div>
+		</fieldset>
 	
-	function savePage() {
+		<fieldset>
+			<legend><span>Template</span></legend>
+		
+			<div>
+				<p>Template panel</p>
+			</div>
+		</fieldset>
+		
+		<fieldset>
+			<legend><span>Site</span></legend>
+			
+			<div>
+				<p>Site panel</p>
+			</div>
+		</fieldset>
+	</form>
+	
+	<form id="cms_local_panel">
+		<fieldset id="cms_insert" class="active">
+			<legend><span>Insert</span></legend>
+		
+			<div>
+				<ol class="cms_components">
+					<li data-component="foo"><span>Foo</span></li>
+					<li data-component="bar"><span>Bar</span></li>
+					<li data-component="baz"><span>Baz</span></li>
+					<li data-component="map"><span>Map</span></li>
+					<li><span>Thing</span></li>
+					<li><span>Thing</span></li>
+					<li><span>Thing</span></li>
+					<li><span>Thing</span></li>
+					<li><span>Thing</span></li>
+					<li><span>Thing</span></li>
+					<li><span>Thing</span></li>
+					<li><span>Thing</span></li>
+					<li><span>Thing</span></li>
+					<li><span>Thing</span></li>
+					<li><span>Thing</span></li>
+				</ol>
+			</div>
+		</fieldset>
+	
+		<fieldset id="cms_inspector">
+			<legend><span>Inspect</span></legend>
+		
+			<div>
+				<p>
+					<label for="cms_inspector_component">Component</label>
+					<input type="text" name="component" id="cms_inspector_component" value="">
+			</div>
+		</fieldset>
+		
+		<fieldset id="cms_options">
+			<legend><span>Options</span></legend>
+			
+			<div>
+				<p>Option panel</p>
+			</div>
+		</fieldset>
+	</form>
+</div>
+
+<script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+<script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+<script src="/vendor/medium-editor.min.js"></script>
+
+<script>
+var cms = new function() {
+	
+	// Private variables
+
+    var editor, $this = this;
+	
+	// Private functions
+	
+	function setupEditor() {
+		editor = new MediumEditor(
+			'[data-editor="inline"]',
+			{
+				buttonLabels: 'fontawesome',
+				cleanPastedHTML: true
+			}
+		);
+	}
+	
+	function showZones() {
+		$('.zone').addClass('shown');
+	}
+	
+	function hideZones() {
+		$('.zone').removeClass('shown');
+	}
+	
+	function registerEventListeners() {
+		// Save page upon change to component content via input (i.e. typing)
+		$('.component').on('input', function() {
+			$this.savePage();
+		});
+		
+		// Set correct tab in toolbar
+		$('#cms_ui legend span').on('click', function() {
+			openPanel( $(this).parent().parent() );
+		});
+		
+		// Inspect components
+		$('.component').on('click', function() {
+			$this.inspect($(this));
+		});
+		
+		// Allow new components to be dragged onto page (into zones)
+		$('.cms_components li').draggable({
+		    helper: 'clone',
+		    connectToSortable: '.zone',
+			snap: true,
+			start: showZones,
+			stop: hideZones
+		});
+    
+		// Allow components to be sorted
+		$('.zone').sortable({
+		    placeholder: 'block-placeholder',
+			handle: '.handle',
+		    update: function (event, ui) {
+				$.get('/components/' + ui.item.attr('data-component'), function(data) {
+					ui.item.replaceWith(data);
+					cms.savePage();
+					cms.refresh();
+				})
+		    }
+		});
+		
+		// Dynamically add drag handles to components (that don't interfer with editing/selecting them)
+		/* $('.component').on('mouseenter', function() {
+			$(this).append('<div class="handle">Move</div>');
+		}).on('mouseleave', function() {
+			$(this).find('.handle').remove();
+		});
+		*/
+	}
+	
+	function openPanel(panel) {
+		panel.parents('form').find('.active').removeClass('active');
+		panel.addClass('active');
+	}
+	
+	function openInspector() {
+		openPanel( $('#cms_inspector') );
+	}
+	
+	function init() {
+		setupEditor();
+		registerEventListeners();
+	}
+	
+    // public interface
+	
+	this.inspect = function(element) {
+		console.log(element.attr('data-type'))
+		openInspector();
+		$('#cms_inspector_component').val(element.attr('data-type'));
+	}
+	
+	this.savePage = function() {
 		var page = {};
 		page['_id'] = window.location.pathname;
 		page['title'] = document.title;
@@ -26,29 +196,27 @@ $(function () {
 			$(zoneElement).find('.component').each(function(component_index, componentElement) {
 				var component = {};
 				component.name = $(componentElement).attr('data-type');
+				component.editor = $(componentElement).attr('data-editor');
 				// TODO: Work out how to access per component config/content here (via some kind of IOC stuff)
-				component.content = $(componentElement).html();
+				component.content = $.trim($(componentElement).html());
 				zone.push(component);
 			});
-			page.content[$(zoneElement).attr('id')] =  zone;
+			page.content[$(zoneElement).attr('id')] = zone;
 		});
 		$.post( "/save", { 'page' : JSON.stringify(page) }, "json" ).done(function( data ) {
 			$("meta[name='revision']").attr("content", data.rev);
-			console.log("Data saved: " + data['rev'] );
+			console && console.log && console.log("Data saved: " + data['rev'] );
   	  	});
+	};
+	
+	this.refresh = function() {
+		init();
 	}
 
-	var editor = new MediumEditor('.component');
-
-	$('.component').mediumInsert({
-		editor: editor
-	});
+	// Initialisation
 	
-	$('.component').on('input', function() {
-	  savePage();
-	});
-
-});
+	init();	
+};
 </script>
 </body>
 </html>

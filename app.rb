@@ -10,6 +10,13 @@ get '/' do
   "Hello World!"
 end
 
+get '/components/:component' do
+  component = OpenStruct.new({content: 'Type here', editor: 'inline', name: params[:component]}) # replace with clever defaults from component
+  views  = "components/#{params[:component]}"
+  locals = {component: component, index: 1}
+  erb(:view, {views: views, layout: :component, layout_options: { :views => 'views' }, locals: locals})
+end
+
 post "/upload" do 
   File.open('public/uploads/images/' + params['file'][:filename], "w") do |f|
     f.write(params['file'][:tempfile].read)
