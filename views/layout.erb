@@ -135,6 +135,16 @@ var cms = new function() {
 		$('.component').removeClass('shown');
 	}
 	
+	function showGuides() {
+		showZones();
+		showComponents();
+	}
+	
+	function hideGuides() {
+		hideZones();
+		hideComponents();
+	}
+	
 	function openPanel(panel) {
 		panel.parents('form').find('.active').removeClass('active');
 		panel.addClass('active');
@@ -171,8 +181,8 @@ var cms = new function() {
 		    connectToSortable: '.zone',
 			tolerance: 'pointer',
 			snap: true,
-			start: showZones,
-			stop: hideZones
+			start: showGuides,
+			stop: hideGuides
 		});
     
 		// Allow components to be sorted
@@ -190,8 +200,8 @@ var cms = new function() {
 				}
 				pageChanged();
 		    },
-			start: showZones,
-			stop: hideZones
+			start: showGuides,
+			stop: hideGuides
 		});
 		
 		// Style up editable components on hover (add drag handles etc.)
