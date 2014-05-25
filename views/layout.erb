@@ -19,7 +19,19 @@
 			<legend><span>Page</span></legend>
 			
 			<div>
-				<p>Page panel</p>
+				<p>
+					<label for="cms_show_zones">Show zones</label>
+					<input type="checkbox" name="cms_show_zones" value="true" id="cms_show_zones">
+				</p>
+				
+				<p>
+					<label for="cms_show_components">Show components</label>
+					<input type="checkbox" name="cms_show_page_content_zones" value="true" id="cms_show_components">
+				</p>
+				
+				<p>
+					<button type="button" name="cms_save_page" id="cms_save_page">Save page</button>
+				</p>
 			</div>
 		</fieldset>
 	
@@ -94,7 +106,7 @@ var cms = new function() {
 	
 	// Private variables
 
-    var editor, $this = this;
+    var editor, $this = this, needsSave = false;
 	
 	// Private functions
 	
@@ -116,10 +128,18 @@ var cms = new function() {
 		$('.zone').removeClass('shown');
 	}
 	
+	function showComponents() {
+		$('.component').addClass('shown');
+	}
+	
+	function hideComponents() {
+		$('.component').removeClass('shown');
+	}
+	
 	function registerEventListeners() {
 		// Save page upon change to component content via input (i.e. typing)
 		$('.component').on('input', function() {
-			$this.savePage();
+			pageChanged();
 		});
 		
 		// Set correct tab in toolbar
@@ -143,24 +163,44 @@ var cms = new function() {
     
 		// Allow components to be sorted
 		$('.zone').sortable({
-		    placeholder: 'block-placeholder',
+		    // placeholder: 'block-placeholder',
 			handle: '.handle',
 		    update: function (event, ui) {
 				$.get('/components/' + ui.item.attr('data-component'), function(data) {
 					ui.item.replaceWith(data);
-					cms.savePage();
+					pageChanged();
 					cms.refresh();
 				})
 		    }
 		});
 		
-		// Dynamically add drag handles to components (that don't interfer with editing/selecting them)
-		/* $('.component').on('mouseenter', function() {
+		// Style up editable components on hover (add drag handles etc.)
+		$('.component').on('mouseenter', function() {
 			$(this).append('<div class="handle">Move</div>');
 		}).on('mouseleave', function() {
 			$(this).find('.handle').remove();
 		});
-		*/
+			
+		// Hide/show content zones
+		$('#cms_show_zones').on('click', function() {
+			if ($(this).is(':checked')) {
+				showZones();
+			} else {
+				hideZones();
+			}
+		});
+		
+		// Hide/show components zones
+		$('#cms_show_components').on('click', function() {
+			if ($(this).is(':checked')) {
+				showComponents();
+			} else {
+				hideComponents();
+			}
+		});
+		
+		// Handle save request
+		$('#cms_save_page').on('click', $this.savePage);
 	}
 	
 	function openPanel(panel) {
@@ -172,41 +212,50 @@ var cms = new function() {
 		openPanel( $('#cms_inspector') );
 	}
 	
+	function pageChanged() {
+		needsSave = true;
+		$('#cms_save_page').removeAttr('disabled');
+	}
+	
 	function init() {
 		setupEditor();
 		registerEventListeners();
+		$('#cms_save_page').attr('disabled','disabled');
 	}
 	
     // public interface
 	
 	this.inspect = function(element) {
-		console.log(element.attr('data-type'))
 		openInspector();
 		$('#cms_inspector_component').val(element.attr('data-type'));
 	}
 	
 	this.savePage = function() {
-		var page = {};
-		page['_id'] = window.location.pathname;
-		page['title'] = document.title;
-		page['content'] = {};
-		page['_rev'] = $('meta[name=revision]').attr("content");
-		$('.zone').each(function(zone_index, zoneElement) {
-			var zone = [];
-			$(zoneElement).find('.component').each(function(component_index, componentElement) {
-				var component = {};
-				component.name = $(componentElement).attr('data-type');
-				component.editor = $(componentElement).attr('data-editor');
-				// TODO: Work out how to access per component config/content here (via some kind of IOC stuff)
-				component.content = $.trim($(componentElement).html());
-				zone.push(component);
+		if (needsSave) {
+			var page = {};
+			page['_id'] = window.location.pathname;
+			page['title'] = document.title;
+			page['content'] = {};
+			page['_rev'] = $('meta[name=revision]').attr("content");
+			$('.zone').each(function(zone_index, zoneElement) {
+				var zone = [];
+				$(zoneElement).find('.component').each(function(component_index, componentElement) {
+					var component = {};
+					component.name = $(componentElement).attr('data-type');
+					component.editor = $(componentElement).attr('data-editor');
+					// TODO: Work out how to access per component config/content here (via some kind of IOC stuff)
+					component.content = $.trim($(componentElement).html());
+					zone.push(component);
+				});
+				page.content[$(zoneElement).attr('id')] = zone;
 			});
-			page.content[$(zoneElement).attr('id')] = zone;
-		});
-		$.post( "/save", { 'page' : JSON.stringify(page) }, "json" ).done(function( data ) {
-			$("meta[name='revision']").attr("content", data.rev);
-			console && console.log && console.log("Data saved: " + data['rev'] );
-  	  	});
+			$.post( "/save", { 'page' : JSON.stringify(page) }, "json" ).done(function( data ) {
+				$("meta[name='revision']").attr("content", data.rev);
+				console && console.log && console.log("Data saved: " + data['rev'] );
+				needsSave = false;
+				$('#cms_save_page').attr('disabled','disabled');
+	  	  	});
+		}
 	};
 	
 	this.refresh = function() {
