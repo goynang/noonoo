@@ -1,6 +1,33 @@
 body {
   padding: 4em;
   margin-right: 25%;
+  font-family: "Gill sans", arial, sans-serif;
+}
+
+#primary {
+  float: left;
+  width: 70%;
+}
+
+#secondary {
+  float: right;
+  width: 25%;
+}
+
+h1, h2, h3, h4, h5, h6, legend, label, th {
+  font-family: 'Arvo', serif;
+  font-weight: normal;
+  color: #1182A9;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  margin: 0 0 1rem 0;
+}
+
+h1 {
+  border-bottom: 2px solid #C2CF29;
+  padding-bottom: 0.2em;
+  margin-bottom: 2rem;
 }
 
 blockquote {
@@ -26,6 +53,7 @@ blockquote {
 .shown {
   outline-width: 1px;
   outline-style: dashed;
+  min-height: 1em;
 }
 
 .component:hover {
@@ -54,6 +82,10 @@ blockquote {
   cursor: move;
 }
 
+#cms_ui * {
+  font-family: "Gill Sans", sans-serif !important;
+}
+
 #cms_ui {
   background: #556;
   position: fixed;
@@ -62,7 +94,7 @@ blockquote {
   bottom: 0;
   width: 25%;
   border-left: 2px solid #334;
-  font-family: "Gill Sans", sans-serif;
+  font-family: "Gill Sans", sans-serif !important;
   color: #FFF;
 }
 
@@ -181,12 +213,12 @@ blockquote {
 }
 
 .zone .block-placeholder {
-  border: 1px dotted #999;
-  border-radius: 4px;
-  padding: 2em;
-  margin: 2px;
+  border-radius: 2px;
   list-style: none;
   display: block;
+  height: 8px;
+  background: #EEE;
+  margin: 2px 0;
 }
 
 .dragster {
