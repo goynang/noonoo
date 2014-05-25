@@ -3,7 +3,7 @@
 <head>
 	<title><%= page.title %></title>
 	
-	<link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+	<link href='http://fonts.googleapis.com/css?family=Arvo' rel='stylesheet' type='text/css'>
 	<link rel="stylesheet" href="/css/cms.css">
 	<link rel="stylesheet" href="/vendor/medium-editor.min.css">
 	
@@ -98,7 +98,7 @@
 </div>
 
 <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
-<script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+<script src="/vendor/jquery-ui-1.10.4.custom.min.js"></script>
 <script src="/vendor/medium-editor.min.js"></script>
 
 <script>
@@ -114,7 +114,6 @@ var cms = new function() {
 		editor = new MediumEditor(
 			'[data-editor="inline"]',
 			{
-				buttonLabels: 'fontawesome',
 				cleanPastedHTML: true
 			}
 		);
@@ -134,6 +133,20 @@ var cms = new function() {
 	
 	function hideComponents() {
 		$('.component').removeClass('shown');
+	}
+	
+	function openPanel(panel) {
+		panel.parents('form').find('.active').removeClass('active');
+		panel.addClass('active');
+	}
+	
+	function openInspector() {
+		openPanel( $('#cms_inspector') );
+	}
+	
+	function pageChanged() {
+		needsSave = true;
+		$('#cms_save_page').removeAttr('disabled');
 	}
 	
 	function registerEventListeners() {
@@ -156,6 +169,7 @@ var cms = new function() {
 		$('.cms_components li').draggable({
 		    helper: 'clone',
 		    connectToSortable: '.zone',
+			tolerance: 'pointer',
 			snap: true,
 			start: showZones,
 			stop: hideZones
@@ -163,15 +177,21 @@ var cms = new function() {
     
 		// Allow components to be sorted
 		$('.zone').sortable({
-		    // placeholder: 'block-placeholder',
+		    placeholder: 'block-placeholder',
 			handle: '.handle',
+			connectWith: '.zone',
+			tolerance: 'pointer',
 		    update: function (event, ui) {
-				$.get('/components/' + ui.item.attr('data-component'), function(data) {
-					ui.item.replaceWith(data);
-					pageChanged();
-					cms.refresh();
-				})
-		    }
+				if (ui.item.attr('data-component') != undefined) {
+					$.get('/components/' + ui.item.attr('data-component'), function(data) {
+						ui.item.replaceWith(data);
+						cms.refresh();
+					});
+				}
+				pageChanged();
+		    },
+			start: showZones,
+			stop: hideZones
 		});
 		
 		// Style up editable components on hover (add drag handles etc.)
@@ -201,20 +221,6 @@ var cms = new function() {
 		
 		// Handle save request
 		$('#cms_save_page').on('click', $this.savePage);
-	}
-	
-	function openPanel(panel) {
-		panel.parents('form').find('.active').removeClass('active');
-		panel.addClass('active');
-	}
-	
-	function openInspector() {
-		openPanel( $('#cms_inspector') );
-	}
-	
-	function pageChanged() {
-		needsSave = true;
-		$('#cms_save_page').removeAttr('disabled');
 	}
 	
 	function init() {
