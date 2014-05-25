@@ -3,35 +3,55 @@ body {
   margin-right: 25%;
 }
 
-.zone {
-  min-height: 1em;
+blockquote {
+  border-left: 3px solid #900;
+  padding-left: 1em;
+  font-style: italic;
+  font-size: 1.2em;
 }
 
-.shown {
-  outline: 2px dashed #900;
+.zone {
+  min-height: 1em;
+  outline-color: #EEE;
+  outline-offset: 10px;
 }
 
 .component {
   position: relative;
   background: #FFF;
+  outline-color: #CEE;
+  outline-offset: 5px;
+}
+
+.shown {
+  outline-width: 1px;
+  outline-style: dashed;
+}
+
+.component:hover {
+  outline: 1px solid #EEE;
 }
 
 .component:focus {
   outline: none;
 }
 
+.shown:focus {
+  outline: 1px solid #ACC;
+}
+
 .component .handle {
   position: absolute;
   top: 0;
-  left: -40px;
+  right: 0;
   border-radius: 4px;
   background: #EEE;
   padding: 4px;
-  width: 40px;
-  font-size: x-small;
-  text-align: left;
+  width: 20px;
+  font-size: xx-small;
+  text-align: center;
   font-family: "Gill Sans", sans-serif;
-  z-index: -1;
+  cursor: move;
 }
 
 #cms_ui {
@@ -70,7 +90,7 @@ body {
 }
 
 #cms_local_panel fieldset div {
-  height: 14em;
+  height: 18em;
 }
 
 #cms_ui fieldset.active div {
@@ -157,6 +177,7 @@ body {
   border: 1px solid #667;
   color: #FFF;
   text-decoration: none;
+  cursor: pointer;
 }
 
 .zone .block-placeholder {
@@ -174,9 +195,6 @@ body {
   height: 2em;
 }
 
-.component .handle {
-  cursor: move;
-}
 
 
 
