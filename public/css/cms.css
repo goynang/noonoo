@@ -44,6 +44,27 @@ blockquote footer {
   color: #999;
 }
 
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+table caption {
+  background: #EEE;
+  color: #999;
+}
+
+table th,
+table td {
+   border: 2px solid #1182A9;
+   padding: 0.5em;
+}
+
+table th {
+  background: #1182A9;
+  color: #FFF;
+}
+
 .zone {
   min-height: 1em;
   outline-color: #AAA;
