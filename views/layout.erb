@@ -114,7 +114,10 @@ var cms = new function() {
 		editor = new MediumEditor(
 			'[data-editor="inline"]',
 			{
-				cleanPastedHTML: true
+				cleanPastedHTML: true,
+				buttons: ['bold', 'italic', 'anchor', 'quote', 'strikethrough'],
+				firstHeader: 'h2',
+				secondHeader: 'h3'
 			}
 		);
 	}
