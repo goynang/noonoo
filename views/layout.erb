@@ -45,6 +45,7 @@
 			<legend><span>Page</span></legend>
 			
 			<div>
+				<p id="page_rev"><%= page._rev %></p>
 				<p>
 					<button type="button" name="cms_save_page" id="cms_save_page">Save page</button>
 				</p>
@@ -332,6 +333,7 @@ var cms = new function() {
 			console.log(page);
 			$.post( "/save", { 'page' : JSON.stringify(page) }, "json" ).done(function( data ) {
 				$("meta[name='revision']").attr("content", data.rev);
+				$("#page_rev").text(data.rev);
 				console && console.log && console.log("Data saved: " + data['rev'] );
 				needsSave = false;
 				$('#cms_save_page').attr('disabled','disabled');
