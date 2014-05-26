@@ -32,9 +32,16 @@ h1 {
 
 blockquote {
   border-left: 3px solid #900;
-  padding-left: 1em;
-  font-style: italic;
+  background: #FEE;
+  padding: 0.5em 1em;
   font-size: 1.2em;
+}
+
+blockquote footer {
+  margin-top: 0.5em;
+  font-style: italic;
+  font-size: 1rem;
+  color: #999;
 }
 
 .zone {
@@ -63,29 +70,42 @@ blockquote {
   outline: 1px solid #CCC;
 }
 
-.component .handle,
-.component .remove {
+.component .actions {
   position: absolute;
-  top: 0;
-  border-radius: 4px;
-  background: #EEE;
-  padding: 4px;
-  font-size: xx-small;
+  top: -1.4em;
+  right: 0;
+  font-size: small;
   text-align: center;
-  font-family: "Gill Sans", sans-serif;
+  display: none;
 }
 
-.component .handle {
-  right: 20px;
+.component .actions div {
+  border-radius: 4px;
+  background: #445;
+  color: #FFF;
+  float: left;
+  width: 1.5em;
+  height: 1.5em;
+  line-height: 1.5em;
+  text-align: center;
+  margin-left: 0.2em;
+}
+
+.component .actions .handle {
   cursor: move;
 }
 
 .component .remove {
-  right: 0;
   cursor: pointer;
 }
 
-#cms_ui * {
+.component [data-editor]:focus {
+  outline: none;
+}
+
+#cms_ui legend,
+#cms_ui label,
+#cms_ui th {
   font-family: "Gill Sans", sans-serif !important;
 }
 
@@ -128,24 +148,20 @@ blockquote {
   background: #445;
 }
 
-#cms_local_panel fieldset div {
-  height: 18em;
-}
-
 #cms_ui fieldset.active div {
   display: block;
 }
 
 #cms_new_panel {
-  height: 12.2em;
+  height: 9.8em;
 }
 
 #cms_global_panel {
-  height: 7.4em;
+  height: 6em;
 }
 
 #cms_local_panel {
-  height: 20em;
+  height: 12em;
 }
 
 #cms_ui legend span {
@@ -161,16 +177,16 @@ blockquote {
   border-left: 1px solid #556;
 }
 
-#cms_ui fieldset span {
+#cms_ui fieldset legend span {
   opacity: 0.5;
   cursor: pointer;
 }
 
-#cms_ui fieldset span:hover {
+#cms_ui fieldset legend span:hover {
   opacity: 0.75;
 }
 
-#cms_ui fieldset.active span {
+#cms_ui fieldset.active legend span {
   opacity: 1;
   color: #FFF;
 }
@@ -188,11 +204,16 @@ blockquote {
   left:67%;
 }
 
+#cms_ui fieldset p {
+  margin: 0 0 0.5em 0;
+}
+
 #cms_ui .cms_components {
   display: block;
   margin: 0;
   padding: 0;
   list-style: none;
+  font-size: small;
 }
 
 #cms_ui .cms_components:after { 
@@ -212,14 +233,21 @@ blockquote {
 
 #cms_ui .cms_components span {
   display: block;
-  padding: 1em 0.25em;
+  padding: 1em 0.25em 1em 0.5em;
   margin: 2px;
   border-radius: 4px;
   background: #445;
   border: 1px solid #667;
-  color: #FFF;
+  color: #CCC;
   text-decoration: none;
   cursor: pointer;
+}
+
+#cms_ui .cms_components span i {
+  display: block;
+  margin: 0 0 0.2em 0;
+  font-size: 2em;
+  color: #EEE;
 }
 
 .zone .block-placeholder {

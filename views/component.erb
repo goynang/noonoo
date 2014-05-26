@@ -1,3 +1,7 @@
-<div class="component" data-editor="<%= component.editor %>" data-type="<%= component.name %>" data-index="<%= index %>">
-	<%= yield %>
+<div class="component" data-type="<%= component.name %>" data-index="<%= index %>">
+	<div class="actions">
+		<div class="handle"><i class="fa fa-arrows"></i></div>
+		<div class="remove"><i class="fa fa-trash-o"></i></div>
+	</div>
+	<div class="content"><%= yield %></div>
 </div>

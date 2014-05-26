@@ -11,7 +11,7 @@ get '/' do
 end
 
 get '/components/:component' do
-  component = OpenStruct.new({content: 'Type here', editor: 'inline', name: params[:component]}) # replace with clever defaults from component
+  component = OpenStruct.new({name: params[:component]}) # replace with clever defaults from component
   views  = "components/#{params[:component]}"
   locals = {component: component, index: 1}
   erb(:view, {views: views, layout: :component, layout_options: { :views => 'views' }, locals: locals})

@@ -3,7 +3,7 @@
 <head>
 	<title><%= page.title %></title>
 
-	<link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">	
+	<link href="//netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">	
 	<link href='http://fonts.googleapis.com/css?family=Arvo' rel='stylesheet' type='text/css'>
 	<link rel="stylesheet" href="/css/cms.css">
 	<link rel="stylesheet" href="/vendor/medium-editor.min.css">
@@ -74,21 +74,32 @@
 		
 			<div>
 				<ol class="cms_components">
-					<li data-component="list"><span>List</span></li>
-					<li data-component="foo"><span>Foo</span></li>
-					<li data-component="bar"><span>Bar</span></li>
-					<li data-component="baz"><span>Baz</span></li>
-					<li data-component="map"><span>Map</span></li>
-					<li><span>Thing</span></li>
-					<li><span>Thing</span></li>
-					<li><span>Thing</span></li>
-					<li><span>Thing</span></li>
-					<li><span>Thing</span></li>
-					<li><span>Thing</span></li>
-					<li><span>Thing</span></li>
-					<li><span>Thing</span></li>
-					<li><span>Thing</span></li>
-					<li><span>Thing</span></li>
+					<li data-component="heading"><span><i class="fa fa-header"></i> Heading</span></li>
+					<li data-component="subheading"><span><i class="fa fa-header"></i> Subheading</span></li>
+					<li data-component="text"><span><i class="fa fa-font"></i> Text</span></li>
+					
+					<li data-component="quote"><span><i class="fa fa-quote-left"></i> Quote</span></li>
+					<li data-component="list"><span><i class="fa fa-list"></i> List</span></li>
+					<li data-component="table"><span><i class="fa fa-table"></i> Table</span></li>
+					
+					<li data-component="image"><span><i class="fa fa-picture-o"></i> Image</span></li>
+					<li data-component="audio"><span><i class="fa fa-volume-up"></i> Audio</span></li>
+					<li data-component="video"><span><i class="fa fa-video-camera"></i> Video</span></li>
+					
+					<li data-component="list"><span><i class="fa fa-list"></i> List</span></li>
+					<li data-component="table"><span><i class="fa fa-table"></i> Table</span></li>
+					<li data-component="form"><span><i class="fa fa-pencil-square-o"></i> Form</span></li>
+										
+					<li data-component="map"><span><i class="fa fa-map-marker"></i> Map</span></li>
+					<li data-component="calendar"><span><i class="fa fa-calendar"></i> Table</span></li>
+					<li data-component="chart"><span><i class="fa fa-bar-chart-o"></i> Chart</span></li>
+					
+					<!--
+					<li data-component="sitemap"><span><i class="fa fa-sitemap"></i> Sitemap</span></li>
+					<li data-component="comments"><span><i class="fa fa-comments"></i> Comments</span></li>
+					<li data-component="team"><span><i class="fa fa-users"></i> Team</span></li>
+					<li data-component="profile"><span><i class="fa fa-user"></i> Profile</span></li>
+					-->
 				</ol>
 			</div>
 		</fieldset>
@@ -130,13 +141,32 @@ var cms = new function() {
 	
 	// Private variables
 
-    var editor, $this = this, needsSave = false;
+    var $this = this, needsSave = false;
 	
 	// Private functions
 	
-	function setupEditor() {
-		editor = new MediumEditor(
+	function setupEditors() {
+		inlineEditor = new MediumEditor(
 			'[data-editor="inline"]',
+			{
+				disableReturn: true,
+				cleanPastedHTML: true,
+				buttonLabels: 'fontawesome',
+				buttons: ['bold', 'italic', 'anchor', 'quote', 'strikethrough'],
+			}
+		);
+		
+		inlineEditor = new MediumEditor(
+			'[data-editor="block"]',
+			{
+				cleanPastedHTML: true,
+				buttonLabels: 'fontawesome',
+				buttons: ['bold', 'italic', 'anchor', 'quote', 'strikethrough'],
+			}
+		);
+		
+		blockEditor = new MediumEditor(
+			'[data-editor="full"]',
 			{
 				cleanPastedHTML: true,
 				buttonLabels: 'fontawesome',
@@ -206,6 +236,7 @@ var cms = new function() {
 		// Allow new components to be dragged onto page (into zones)
 		$('.cms_components li').draggable({
 		    helper: 'clone',
+			opacity: 0.33,
 		    connectToSortable: '.zone',
 			tolerance: 'pointer',
 			snap: true,
@@ -234,22 +265,13 @@ var cms = new function() {
 		
 		// Style up editable components on hover (add drag handles etc.)
 		$('.component').on('mouseenter', function() {
-			var m = document.createElement('div');
-			m.innerText = 'move';
-			m.className = 'handle';
-			$(m).disableSelection();
-			$(this).append(m);
-			var d = document.createElement('div');
-			d.innerText = 'x';
-			d.className = 'remove';
-			$(d).disableSelection();
-			$(this).append(d);
+			$(this).find('.actions').show();
 		}).on('mouseleave', function() {
-			$(this).find('.handle, .remove').remove();
+			$(this).find('.actions').hide();
 		});
 		
 		$('.component').on('click', '.remove', function() {
-			$(this).parent().remove();
+			$(this).parents('.component').remove();
 			pageChanged();
 		});
 			
@@ -276,7 +298,7 @@ var cms = new function() {
 	}
 	
 	function init() {
-		setupEditor();
+		setupEditors();
 		registerEventListeners();
 		$('#cms_save_page').attr('disabled','disabled');
 	}
@@ -300,13 +322,14 @@ var cms = new function() {
 				$(zoneElement).find('.component').each(function(component_index, componentElement) {
 					var component = {};
 					component.name = $(componentElement).attr('data-type');
-					component.editor = $(componentElement).attr('data-editor');
-					// TODO: Work out how to access per component config/content here (via some kind of IOC stuff)
-					component.content = $.trim($(componentElement).html());
+					$(componentElement).find('[data-property]').each(function(i, e) {
+						component[$(e).attr('data-property')] = $.trim($(e).html());
+					});
 					zone.push(component);
 				});
 				page.content[$(zoneElement).attr('id')] = zone;
 			});
+			console.log(page);
 			$.post( "/save", { 'page' : JSON.stringify(page) }, "json" ).done(function( data ) {
 				$("meta[name='revision']").attr("content", data.rev);
 				console && console.log && console.log("Data saved: " + data['rev'] );
