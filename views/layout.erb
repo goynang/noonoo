@@ -209,9 +209,23 @@ var cms = new function() {
 		
 		// Style up editable components on hover (add drag handles etc.)
 		$('.component').on('mouseenter', function() {
-			$(this).append('<div class="handle">Move</div>');
+			var m = document.createElement('div');
+			m.innerText = 'move';
+			m.className = 'handle';
+			$(m).disableSelection();
+			$(this).append(m);
+			var d = document.createElement('div');
+			d.innerText = 'x';
+			d.className = 'remove';
+			$(d).disableSelection();
+			$(this).append(d);
 		}).on('mouseleave', function() {
-			$(this).find('.handle').remove();
+			$(this).find('.handle, .remove').remove();
+		});
+		
+		$('.component').on('click', '.remove', function() {
+			$(this).parent().remove();
+			pageChanged();
 		});
 			
 		// Hide/show content zones
