@@ -30,6 +30,13 @@ post "/save" do
   RestClient.put("#{DB_URL}/#{page['_id']}", params['page'], {:content_type => :json})
 end
 
+post "/new" do
+  page = build_page(params[:title])
+  id = slugify(params[:title])
+  RestClient.put("#{DB_URL}/#{id}", page, {:content_type => :json})
+  redirect "/#{id}"
+end
+
 get '/*' do
   page = get_page(params[:splat].join('/').to_s)
   content = get_content(page)
@@ -39,6 +46,13 @@ end
 
 
 
+def build_page(title)
+  {
+    '_id' => slugify(title),
+    'title' => title,
+    'content' => { 'primary' => [], 'secondary' => []}
+  }.to_json
+end
 
 def get_page(id)
   begin
@@ -60,4 +74,8 @@ def get_content(page)
     end
   end
   OpenStruct.new(content)
+end
+
+def slugify(value)
+  value.downcase.strip.gsub(' ', '-').gsub(/[^\w-]/, '')
 end

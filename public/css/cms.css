@@ -136,13 +136,16 @@ blockquote {
   display: block;
 }
 
-#cms_ui form:nth-child(1) {
-  height: 10em;
+#cms_new_panel {
+  height: 12.2em;
 }
 
+#cms_global_panel {
+  height: 7.4em;
+}
 
-#cms_ui form:nth-child(1) div {
-  height: 6em;
+#cms_local_panel {
+  height: 20em;
 }
 
 #cms_ui legend span {

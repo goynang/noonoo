@@ -2,7 +2,8 @@
 <html>
 <head>
 	<title><%= page.title %></title>
-	
+
+	<link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">	
 	<link href='http://fonts.googleapis.com/css?family=Arvo' rel='stylesheet' type='text/css'>
 	<link rel="stylesheet" href="/css/cms.css">
 	<link rel="stylesheet" href="/vendor/medium-editor.min.css">
@@ -14,21 +15,36 @@
 <%= yield %>
 
 <div id="cms_ui">
+	<form id="cms_new_panel" method="post" action="/new">
+		<fieldset class="active">
+			<legend><span>New page</legend>
+			
+			<div>
+				<p>
+					<label for="cms_page_title">Page title</label>
+					<input type="text" name="title" value="" id="cms_page_title">
+				</p>
+				
+				<p>
+					<label for="cms_page_location">Location</label>
+					<select name="location" id="cms_page_location">
+						<option value="sibling">Next to this page</option>
+						<option value="child">Underneath this page</option>
+					</select>
+				</p>
+				
+				<p>
+					<input type="submit" value="Create">
+				</p>
+			</div>
+		</fieldset>
+	</form>
+	
 	<form id="cms_global_panel">
 		<fieldset class="active">
 			<legend><span>Page</span></legend>
 			
 			<div>
-				<p>
-					<label for="cms_show_zones">Show zones</label>
-					<input type="checkbox" name="cms_show_zones" value="true" id="cms_show_zones">
-				</p>
-				
-				<p>
-					<label for="cms_show_components">Show components</label>
-					<input type="checkbox" name="cms_show_page_content_zones" value="true" id="cms_show_components">
-				</p>
-				
 				<p>
 					<button type="button" name="cms_save_page" id="cms_save_page">Save page</button>
 				</p>
@@ -91,7 +107,15 @@
 			<legend><span>Options</span></legend>
 			
 			<div>
-				<p>Option panel</p>
+				<p>
+					<label for="cms_show_zones">Show zones</label>
+					<input type="checkbox" name="cms_show_zones" value="true" id="cms_show_zones">
+				</p>
+				
+				<p>
+					<label for="cms_show_components">Show components</label>
+					<input type="checkbox" name="cms_show_page_content_zones" value="true" id="cms_show_components">
+				</p>
 			</div>
 		</fieldset>
 	</form>
@@ -115,7 +139,8 @@ var cms = new function() {
 			'[data-editor="inline"]',
 			{
 				cleanPastedHTML: true,
-				buttons: ['bold', 'italic', 'anchor', 'quote', 'strikethrough'],
+				buttonLabels: 'fontawesome',
+				buttons: ['header1', 'header2', 'quote', 'orderedlist', 'unorderedlist', 'bold', 'italic', 'anchor', 'quote', 'strikethrough'],
 				firstHeader: 'h2',
 				secondHeader: 'h3'
 			}
