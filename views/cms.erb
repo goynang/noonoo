@@ -1,0 +1,114 @@
+<div id="cms_ui">
+	<form id="cms_new_panel" method="post" action="/new">
+		<fieldset class="active">
+			<legend><span>New page</legend>
+			
+			<div>
+				<p>
+					<label for="cms_page_title">Page title</label>
+					<input type="text" name="title" value="" id="cms_page_title">
+				</p>
+				
+				<p>
+					<label for="cms_page_location">Location</label>
+					<select name="location" id="cms_page_location">
+						<option value="sibling">Next to this page</option>
+						<option value="child">Underneath this page</option>
+					</select>
+				</p>
+				
+				<p>
+					<input type="submit" value="Create">
+				</p>
+			</div>
+		</fieldset>
+	</form>
+	
+	<form id="cms_global_panel">
+		<fieldset class="active">
+			<legend><span>Page</span></legend>
+			
+			<div>
+				<p id="page_rev"><%= page._rev %></p>
+				<p>
+					<button type="button" name="cms_save_page" id="cms_save_page">Save page</button>
+				</p>
+			</div>
+		</fieldset>
+	
+		<fieldset>
+			<legend><span>Template</span></legend>
+		
+			<div>
+				<p>Template panel</p>
+			</div>
+		</fieldset>
+		
+		<fieldset>
+			<legend><span>Site</span></legend>
+			
+			<div>
+				<p>Site panel</p>
+			</div>
+		</fieldset>
+	</form>
+	
+	<form id="cms_local_panel">
+		<fieldset id="cms_insert" class="active">
+			<legend><span>Insert</span></legend>
+		
+			<div>
+				<ol class="cms_components">
+					<li data-component="heading"><span><i class="fa fa-header"></i> Heading</span></li>
+					<li data-component="subheading"><span><i class="fa fa-header"></i> Subheading</span></li>
+					<li data-component="text"><span><i class="fa fa-font"></i> Text</span></li>
+					
+					<li data-component="quote"><span><i class="fa fa-quote-left"></i> Quote</span></li>
+					<li data-component="list"><span><i class="fa fa-list"></i> List</span></li>
+					<li data-component="table"><span><i class="fa fa-table"></i> Table</span></li>
+					
+					<li data-component="image"><span><i class="fa fa-picture-o"></i> Image</span></li>
+					<li data-component="audio"><span><i class="fa fa-volume-up"></i> Audio</span></li>
+					<li data-component="video"><span><i class="fa fa-video-camera"></i> Video</span></li>
+										
+					<li data-component="map"><span><i class="fa fa-map-marker"></i> Map</span></li>
+					<li data-component="form"><span><i class="fa fa-pencil-square-o"></i> Form</span></li>
+					<li data-component="chart"><span><i class="fa fa-bar-chart-o"></i> Chart</span></li>
+					
+					<!--
+					<li data-component="sitemap"><span><i class="fa fa-sitemap"></i> Sitemap</span></li>
+					<li data-component="comments"><span><i class="fa fa-comments"></i> Comments</span></li>
+					<li data-component="team"><span><i class="fa fa-users"></i> Team</span></li>
+					<li data-component="profile"><span><i class="fa fa-user"></i> Profile</span></li>
+					-->
+				</ol>
+			</div>
+		</fieldset>
+	
+		<fieldset id="cms_inspector">
+			<legend><span>Inspect</span></legend>
+		
+			<div>
+				<p>
+					<label for="cms_inspector_component">Component</label>
+					<input type="text" name="component" id="cms_inspector_component" value="">
+			</div>
+		</fieldset>
+		
+		<fieldset id="cms_options">
+			<legend><span>Options</span></legend>
+			
+			<div>
+				<p>
+					<label for="cms_show_zones">Show zones</label>
+					<input type="checkbox" name="cms_show_zones" value="true" id="cms_show_zones">
+				</p>
+				
+				<p>
+					<label for="cms_show_components">Show components</label>
+					<input type="checkbox" name="cms_show_page_content_zones" value="true" id="cms_show_components">
+				</p>
+			</div>
+		</fieldset>
+	</form>
+</div>
