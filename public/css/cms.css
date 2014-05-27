@@ -71,6 +71,7 @@ table th {
   outline-style: dotted;
   outline-offset: 10px;
   outline-width: 0;
+  margin: -1em 0;
 }
 
 .component {
@@ -80,6 +81,7 @@ table th {
   outline-style: dashed;
   outline-offset: 5px;
   outline-width: 0;
+  margin: 1em 0;
 }
 
 .shown {
