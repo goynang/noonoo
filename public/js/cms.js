@@ -2,7 +2,7 @@ var cms = function() {
 	
 	// Private variables
 
-    var $this = this, needsSave = false;
+    var $this = this, currentElement = null, needsSave = false;
 	
 	// Private functions
 	
@@ -116,9 +116,9 @@ var cms = function() {
 					$.get('/components/' + ui.item.attr('data-component'), function(data) {
 						ui.item.replaceWith(data);
 						$this.refresh();
+						pageChanged();
 					});
 				}
-				pageChanged();
 			},
 			start: showGuides,
 			stop: hideGuides
@@ -154,8 +154,16 @@ var cms = function() {
 			}
 		});
 		
+		// Handle inspector based changes
+		$('#cms_inspector').on('blur', 'input', function() {
+			var n = $(this).attr('name');
+			var v = $(this).val();
+			currentElement.find('[data-inspectable=true]').attr(n, v);
+		});
+		
 		// Handle save request
 		$('#cms_save_page').on('click', $this.savePage);
+		pageChanged();
 	}
 	
 	function init() {
@@ -167,8 +175,23 @@ var cms = function() {
     // public interface
 	
 	this.inspect = function(element) {
+		currentElement = element;
 		openInspector();
-		$('#cms_inspector_component').val(element.attr('data-type'));
+		var $fieldPrototype = $('<p><label></label><input type="text" name="" value=""></p>');
+		var $fields = $('<div></div>');
+		var $inspector = $('#cms_inspector div');
+		// TODO: this doesn't really deal with multiple elements properly
+		element.find('[data-inspectable=true]').each(function() {
+			$.each(this.attributes, function() {
+				if(this.specified && this.name != 'data-inspectable') {
+					$fieldPrototype.find('label').text(this.name);
+					$fieldPrototype.find('input').attr('name', this.name);
+					$fieldPrototype.find('input').attr('value', this.value);
+					$fields.append($fieldPrototype.clone());
+				}
+			});
+		});
+		$inspector.replaceWith($fields);
 	};
 	
 	this.savePage = function() {
