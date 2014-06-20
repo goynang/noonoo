@@ -4,4 +4,4 @@ gem 'unicorn'
 gem 'sinatra'
 gem 'sinatra-contrib'
 gem 'json'
-gem 'rest-client'
+gem "mongoid", "~> 3.1.6"

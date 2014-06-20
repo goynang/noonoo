@@ -197,10 +197,9 @@ var cms = function() {
 	this.savePage = function() {
 		if (needsSave) {
 			var page = {};
-			page._id = window.location.pathname;
+			page.path = window.location.pathname;
 			page.title = document.title;
 			page.content = {};
-			page._rev = $('meta[name=revision]').attr("content");
 			$('.zone').each(function(zone_index, zoneElement) {
 				var zone = [];
 				$(zoneElement).find('.component').each(function(component_index, componentElement) {
@@ -214,9 +213,7 @@ var cms = function() {
 				page.content[$(zoneElement).attr('id')] = zone;
 			});
 			console.log(page);
-			$.post( "/save", { 'page' : JSON.stringify(page) }, "json" ).done(function( data ) {
-				$("meta[name='revision']").attr("content", data.rev);
-				$("#page_rev").text(data.rev);
+			$.post( page.path, { 'page' : JSON.stringify(page) }, "json" ).done(function( data ) {
 				needsSave = false;
 				$('#cms_save_page').attr('disabled','disabled');
 			});

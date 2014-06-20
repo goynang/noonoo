@@ -6,11 +6,10 @@
 	<link href="http://fonts.googleapis.com/css?family=Arvo" rel="stylesheet" type="text/css">
 	<link rel="stylesheet" href="/css/cms.css">
 	<link rel="stylesheet" href="/vendor/medium-editor.min.css">
-	<meta name="revision" content="<%= page._rev %>">
 </head>
 <body>
 	<%= yield %>
-	<%= erb :cms, locals: {page: page, content: content} %>
+	<%= erb :cms, locals: {page: page} %>
 	<script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
 	<script src="/vendor/jquery-ui-1.10.4.custom.min.js"></script>
 	<script src="/vendor/medium-editor.min.js"></script>
