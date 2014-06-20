@@ -1,8 +1,7 @@
 class App < Sinatra::Base
 
   get '/' do
-    page = Page.new
-    erb :page, locals: {page: page} 
+    'Nothing to see here!'
   end
 
   get '/components/:component' do
