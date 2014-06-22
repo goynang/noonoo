@@ -1,2 +1,2 @@
 require File.join(File.dirname(__FILE__), 'app')
-run App
+run NooNoo::App

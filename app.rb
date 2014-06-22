@@ -1,22 +1,19 @@
-$:.unshift File.join(__FILE__, "../config")
-$:.unshift File.join(__FILE__, "../app")
-
 require 'sinatra/base'
-require 'sinatra/reloader'
-require 'json'
-require 'ostruct'
-require 'mongoid'
-require 'bundler/setup'
-require 'app_config'
-require 'routes'
-require 'helpers'
-require 'models'
 
-class App < Sinatra::Base
-  configure :development do
-    register Sinatra::Reloader
-  end
+require_relative 'app/config'
+require_relative 'app/helpers'
+require_relative 'app/models'
+require_relative 'app/routes'
+
+module NooNoo
+  class App < Sinatra::Application
   
-  set :app_file, __FILE__
-  set :views, settings.root + '/views'
+    set :app_file, __FILE__
+    
+    helpers NooNoo::Helpers
+
+  end
 end
+
+# Make irb more useful ($irb and then $require '.app.rb')
+include NooNoo::Models

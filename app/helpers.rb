@@ -1,5 +1,8 @@
-class App < Sinatra::Base
-  helpers do
+require 'ostruct'
+
+module NooNoo
+  module Helpers
+  
     # Convert human friendly string into one suitable for use in a URL as a path part.
     def slugify(value)
       '/' + value.downcase.strip.gsub(' ', '-').gsub(/[^\w-]/, '')
