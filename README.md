@@ -7,7 +7,7 @@ A little web site editor (don't you dare say CMS) based on pages, components, te
 
 Small, elegant, and surprisingly powerful.
 
-<img src="screenie.png" width="100%" style="border: 4px solid #CCC;" />
+<img src="screenie.png" width="100%" style="max-width: 100%;" />
 
 * Editable templates (master pages)
 * Drag and drop components onto pages or templates (and around them to reorganise)
