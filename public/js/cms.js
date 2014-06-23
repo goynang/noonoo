@@ -204,15 +204,14 @@ var cms = function() {
 				var zone = [];
 				$(zoneElement).find('.component').each(function(component_index, componentElement) {
 					var component = {};
-					component.name = $(componentElement).attr('data-type');
-					$(componentElement).find('[data-property]').each(function(i, e) {
-						component[$(e).attr('data-property')] = $.trim($(e).html());
+					component.name = $(componentElement).attr('itemtype');
+					$(componentElement).find('[itemprop]').each(function(i, e) {
+						component[$(e).attr('itemprop')] = $.trim($(e).html());
 					});
 					zone.push(component);
 				});
 				page.content[$(zoneElement).attr('id')] = zone;
 			});
-			console.log(page);
 			$.post( page.path, { 'page' : JSON.stringify(page) }, "json" ).done(function( data ) {
 				needsSave = false;
 				$('#cms_save_page').attr('disabled','disabled');
