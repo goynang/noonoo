@@ -132,6 +132,14 @@ table th {
   font-family: "Gill Sans", sans-serif !important;
 }
 
+#cms_ui label {
+  display: block;
+}
+
+#cms_ui input[type=text] {
+  width: 100%;
+}
+
 #cms_ui h1, #cms_ui h2, #cms_ui h3, #cms_ui h4, #cms_ui h5, #cms_ui h6, #cms_ui legend, #cms_ui label, #cms_ui th {
   color: #FFF;
 }
@@ -176,11 +184,11 @@ table th {
 }
 
 #cms_new_panel {
-  height: 9.8em;
+  height: 12.6em;
 }
 
 #cms_global_panel {
-  height: 7.7em;
+  height: 6.5em;
 }
 
 #cms_local_panel {
