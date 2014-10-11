@@ -15,5 +15,5 @@ module NooNoo
   end
 end
 
-# Make irb more useful ($irb and then $require '.app.rb')
+# Make irb more useful ($irb and then $require 'app.rb')
 include NooNoo::Models
