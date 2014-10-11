@@ -2,14 +2,17 @@
 <html>
 <head>
 	<title><%= page.title %></title>
-	<link href="//netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">	
 	<link href="http://fonts.googleapis.com/css?family=Arvo" rel="stylesheet" type="text/css">
-	<link rel="stylesheet" href="/css/cms.css">
+	<link rel="stylesheet" href="/css/site.css">
+  <!-- For the CMS interface... -->
+  <link href="//netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/css/cms.css">
 	<link rel="stylesheet" href="/vendor/medium-editor.min.css">
 </head>
 <body>
 	<%= yield %>
-	<%= erb :cms, locals: {page: page} %>
+  <!-- For the CMS interface... -->
+  <%= erb :cms, locals: {page: page} %>
 	<script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
 	<script src="/vendor/jquery-ui-1.10.4.custom.min.js"></script>
 	<script src="/vendor/medium-editor.min.js"></script>

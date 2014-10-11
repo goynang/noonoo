@@ -11,7 +11,9 @@ module NooNoo
     
       field :title, :type => String
       field :path,  :type => String
-      field :content, :type => Object
+      field :zones, :type => Hash
+      
+      accepts_nested_attributes_for :layout
     end
 
     class Layout
@@ -20,38 +22,18 @@ module NooNoo
       store_in collection: "layouts"
   
       has_many :pages
-      has_and_belongs_to_many :zones
   
       field :title, :type => String
-    end
-
-    class Zone
-      include Mongoid::Document
-      
-      store_in collection: "zones"
-  
-      has_and_belongs_to_many :layouts
-  
-      field :title, :type => String
-    end
-
-    class Placement
-      include Mongoid::Document
-      
-      store_in collection: "placements"
-  
-      has_and_belongs_to_many :zones
-      has_and_belongs_to_many :components
+      field :zones, :type => Array
     end
 
     class Component
       include Mongoid::Document
       
       store_in collection: "components"
-  
-      has_and_belongs_to_many :placements
-
+        
       field :name, :type => String
+      # All other fields are specific to type of component (no predetermined schema)
     end
   end
 end

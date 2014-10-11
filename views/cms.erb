@@ -30,7 +30,7 @@
 			
 			<div>
 				<p>
-					<button type="button" name="cms_save_page" id="cms_save_page">Save page</button>
+					<button type="button" type="button" id="cms_save_page">Save page</button>
 				</p>
 			</div>
 		</fieldset>
@@ -39,7 +39,7 @@
 			<legend><span>Template</span></legend>
 		
 			<div>
-				<p>Template panel</p>
+				<p>Template</p>
 			</div>
 		</fieldset>
 		
@@ -58,25 +58,28 @@
 		
 			<div>
 				<ol class="cms_components">
+					<li data-component="page-title"><span><i class="fa fa-header"></i> Page title</span></li>
 					<li data-component="heading"><span><i class="fa fa-header"></i> Heading</span></li>
 					<li data-component="subheading"><span><i class="fa fa-header"></i> Subheading</span></li>
-					<li data-component="text"><span><i class="fa fa-font"></i> Text</span></li>
 					
+					<li data-component="text"><span><i class="fa fa-font"></i> Text</span></li>
 					<li data-component="quote"><span><i class="fa fa-quote-left"></i> Quote</span></li>
 					<li data-component="list"><span><i class="fa fa-list"></i> List</span></li>
-					<li data-component="table"><span><i class="fa fa-table"></i> Table</span></li>
+					
 					
 					<li data-component="image"><span><i class="fa fa-picture-o"></i> Image</span></li>
 					<li data-component="audio"><span><i class="fa fa-volume-up"></i> Audio</span></li>
 					<li data-component="video"><span><i class="fa fa-video-camera"></i> Video</span></li>
-										
+					
+					<li data-component="table"><span><i class="fa fa-table"></i> Table</span></li>
 					<li data-component="map"><span><i class="fa fa-map-marker"></i> Map</span></li>
 					<li data-component="menu"><span><i class="fa fa-bars"></i> Menu</span></li>
-					<li data-component="chart"><span><i class="fa fa-bar-chart-o"></i> Chart</span></li>
 					
-					<!--
+					<li data-component="chart"><span><i class="fa fa-bar-chart-o"></i> Chart</span></li>
 					<li data-component="sitemap"><span><i class="fa fa-sitemap"></i> Sitemap</span></li>
 					<li data-component="comments"><span><i class="fa fa-comments"></i> Comments</span></li>
+            
+          <!--
 					<li data-component="team"><span><i class="fa fa-users"></i> Team</span></li>
 					<li data-component="profile"><span><i class="fa fa-user"></i> Profile</span></li>
 					-->
@@ -95,8 +98,13 @@
 			
 			<div>
 				<p>
-					<label for="cms_show_zones">Show zones</label>
-					<input type="checkbox" name="cms_show_zones" value="true" id="cms_show_zones">
+					<label for="cms_show_page_zones">Show page zones</label>
+					<input type="checkbox" name="cms_show_page_zones" value="true" id="cms_show_page_zones">
+				</p>
+				
+				<p>
+					<label for="cms_show_template_zones">Show template zones</label>
+					<input type="checkbox" name="cms_show_template_zones" value="true" id="cms_show_template_zones">
 				</p>
 				
 				<p>
