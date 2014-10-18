@@ -19,43 +19,56 @@ module NooNoo
       }
     end
     
-    def render_page(page)
-      content = parse_content(page)
+    def render_page(page, request)
+      content = parse_content(page, request)
       # TODO: make the template to load dynamic from the page object (rather than hardcoding this as :page)
       erb :page, locals: {page: page, content: content}
     end
 
-    def parse_content(page)
+    def parse_content(page, request)
       # TODO: Verify JSON object is well formed as a page (contains correct elements)
       content = {}
           
       page.layout.zones.each do |zone, components|
-        (content[zone] ||= '') << render_components(components, page)
+        (content[zone] ||= '') << render_components(components, page, request)
       end unless page.layout.nil? || page.layout.zones.empty?
       
       page.zones.each do |zone, components|
-        (content[zone] ||= '') << render_components(components, page)
+        (content[zone] ||= '') << render_components(components, page, request)
       end unless page.zones.nil? || page.zones.empty?
       
       OpenStruct.new(content)
     end
     
     # Render collection of components within a page and return string of combined results
-    def render_components(components, page)
+    def render_components(components, page, request)
       rendered = ''
       components.each do |component|
-        rendered << render_component(OpenStruct.new(component), page)
+        rendered << render_component(OpenStruct.new(component), page, request)
       end
       rendered
     end
     
     # Render individual component and return result as a string
-    def render_component(component, page)
+    def render_component(component, page, request)
+      locals = {page: page, component: component}
+      
+      filename = "components/#{component.name}/#{component.name}.rb"
+      if File.file?(filename)
+        require_relative '../' + filename
+        renderer = Object.const_get("NooNoo::Components::#{component.name.capitalize}")
+        # if renderer.responds_to? :render
+          locals = renderer.render(component, page, request)
+        # else
+        #  raise "Attempt to render component object that doesn't implement render method: #{component.name}"
+        # end    
+      end
+      
       erb(:view, {
         views: "components/#{component.name}",
         layout: :component,
         layout_options: { :views => 'views' },
-        locals: {page: page, component: component}
+        locals: locals
       })
     end
   end

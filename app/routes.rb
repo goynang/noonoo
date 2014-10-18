@@ -45,10 +45,11 @@ module NooNoo
     get '*' do
       page = Page.find_by(path: params[:splat].join('/').to_s)
       if params[:component]
-        component = Component.new({name: params[:component]}) # TODO: replace with clever defaults from component
-        render_component(component, page)
+        # TODO: replace dynamically loadad component object of relevant class???!?
+        component = Component.new({name: params[:component]}) 
+        render_component(component, page, params)
       else
-        render_page(page)
+        render_page(page, params)
       end
     end
 
