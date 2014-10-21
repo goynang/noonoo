@@ -1,3 +1,7 @@
+String.prototype.capitalize = function() {
+    return this.charAt(0).toUpperCase() + this.slice(1);
+};
+
 var cms = function() {
 	
 	// Private variables
@@ -79,12 +83,8 @@ var cms = function() {
 	}
 	
 	function openPanel(panel) {
-		panel.parents('form').find('.active').removeClass('active');
+		panel.parents('.panels').find('.active').removeClass('active');
 		panel.addClass('active');
-	}
-	
-	function openInspector() {
-		openPanel( $('#cms_inspector') );
 	}
 	
 	function pageChanged() {
@@ -94,14 +94,20 @@ var cms = function() {
 	}
 	
 	function registerEventListeners() {
+		
+		// Toggle CMS panels
+		$('#cms_ui .toggle').on('click', function() {
+			$('html').toggleClass('cms');
+		});
+		
 		// Save page upon change to component content via input (i.e. typing)
 		$('.component').on('input', function() {
 			pageChanged();
 		});
 		
 		// Set correct tab in toolbar
-		$('#cms_ui legend span').on('click', function() {
-			openPanel( $(this).parent().parent() );
+		$('#cms_ui h2').on('click', function() {
+			openPanel( $(this).parents('.panel') );
 		});
 		
 		// Inspect components
@@ -205,10 +211,11 @@ var cms = function() {
 	
 	this.inspect = function(element) {
 		currentElement = element;
-		openInspector();
 		var $fieldPrototype = $('<p><label></label><input type="text" name="" value=""></p>');
 		var $fields = $('<div></div>');
 		var $inspector = $('#cms_inspector div');
+		var swap = false;
+		$('#cms_inspector legend span').text(element.attr('itemtype').capitalize());
 		// TODO: this doesn't really deal with multiple elements properly
 		element.find('[data-inspectable=true]').each(function() {
 			$.each(this.attributes, function() {
@@ -217,10 +224,15 @@ var cms = function() {
 					$fieldPrototype.find('input').attr('name', this.name);
 					$fieldPrototype.find('input').attr('value', this.value);
 					$fields.append($fieldPrototype.clone());
+					swap = true;
 				}
 			});
 		});
-		$inspector.replaceWith($fields);
+		if (swap) {
+			$inspector.replaceWith($fields);
+		} else {
+			$inspector.replaceWith('<div class="empty">This element has no editable attributes</div>');
+		}
 	};
 	
 	this.savePage = function() {
