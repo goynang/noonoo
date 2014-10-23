@@ -10,7 +10,9 @@
 	<link rel="stylesheet" href="/vendor/medium-editor.min.css">
 </head>
 <body>
+  <div id="viewport">
 	<%= yield %>
+  </div>
   <!-- For the CMS interface... -->
   <%= erb :cms, locals: {page: page} %>
 	<script src="//code.jquery.com/jquery-1.11.0.min.js"></script>

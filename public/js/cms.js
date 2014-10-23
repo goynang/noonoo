@@ -100,6 +100,17 @@ var cms = function() {
 			$('html').toggleClass('cms');
 		});
 		
+		$(document).keypress(function(e) {
+			// press 'e'
+			if(e.which == 101) {
+				$('html').toggleClass('cms');
+			}
+		});
+		
+		$('#cms_preview_device').on('change', function() {
+			previewAs($(this).val());
+		});
+		
 		// Save page upon change to component content via input (i.e. typing)
 		$('.component').on('input', function() {
 			pageChanged();
@@ -264,6 +275,11 @@ var cms = function() {
 				$('#cms_save_page').attr('disabled','disabled');
 			});
 		}
+	};
+	
+	this.previewAs = function(what) {
+		$('html').removeClass('native').removeClass('phone').removeClass('tablet').removeClass('laptop').removeClass('desktop');
+		$('html').addClass(what);
 	};
 	
 	this.refresh = function() {

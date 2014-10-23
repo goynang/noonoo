@@ -89,12 +89,55 @@ body.showing-template-zones .template-zone .component {
 }
 
 html {
-  transition: margin 0.25s ease;
+  transition: all 0.25s ease;
 }
+
+html.phone #viewport,
+html.tablet #viewport,
+html.laptop #viewport,
+html.desktop #viewport {
+  margin: 1em auto;
+  border: 2px solid #DDD;
+  transition: width 0.25s ease;
+  transition: height 0.25s ease;
+  transition: margin 0.25s ease;
+  overflow: scroll;
+}
+
+html.phone body,
+html.tablet body,
+html.laptop body,
+html.desktop body {
+  background: #EEE;
+}
+
+  html.phone div#viewport {
+    width: 320px;
+    height: 480px;
+  }
+  
+  html.tablet div#viewport {
+    width: 640px;
+    height: 800px;
+  }
+  
+  html.laptop div#viewport {
+    width: 1024px;
+    height: 768px;
+  }
+  
+  html.desktop div#viewport {
+    width: 1280px;
+    height: 960px;
+  }
 
 html.cms {
   margin: 0 25% 0 0;
-  transition: margin 0.25s ease;
+  transition: all 0.25s ease;
+}
+
+html.cms body {
+
 }
 
 #cms_ui {
@@ -122,17 +165,28 @@ html.cms #cms_ui {
   position: absolute;
   top: 50%;
   margin: -2em 0 0 0;
-  left: -2em;
-  background: #DDD;
+  left: -1.25em;
+  background: #EEE;
   color: #FFF;
   border-radius: 4px 0 0 4px;
-  width: 1.75em;
+  width: 1em;
   height: 3em;
   padding: 0 0 0 0.25em;
   line-height: 3em;
   text-align: center;
   cursor: pointer;
   font-weight: bold;
+}
+
+#cms_ui .tools {
+  background: #EEE;
+  height: 4em;
+  border-bottom: 1px solid #DDD;
+  position: fixed;
+  top: -4.2em;
+  left: 0;
+  right: 0;
+  transition: top 0.25s ease;
 }
 
 #cms_ui fieldset {
@@ -174,6 +228,25 @@ html.cms #cms_ui {
   height: 4em;
 }
 
+#cms_ui input[type=checkbox],
+#cms_ui input[type=radio] {
+  font-size: 2em;
+}
+
+#cms_ui .checkbox {
+  position: relative;
+}
+
+#cms_ui .checkbox input {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+#cms_ui .checkbox label {
+  padding-left: 2em;
+}
+
 #cms_ui input[type=text],
 #cms_ui textarea {
   outline: none !important;
@@ -187,11 +260,16 @@ html.cms #cms_ui {
 #cms_ui select {
   font-size: 1.2em;
   width: 100%;
+  cursor: pointer;
 }
 
 #cms_ui input[type=submit] {
-  float: right;
-  font-size: 1.2em;
+  width: 100%;
+  font-size: 1.5em;
+  margin-top: 0.75em;
+  color: #0080FF;
+  font-weight: bold;
+  cursor: pointer;
 }
 
 #cms_ui h1, #cms_ui h2, #cms_ui h3, #cms_ui h4, #cms_ui h5, #cms_ui h6, #cms_ui legend, #cms_ui label, #cms_ui th {
@@ -230,7 +308,7 @@ html.cms #cms_ui {
   font-size: 1em;
   display: block;
   position: absolute;
-  width: 33%;
+  width: 25%;
   top: -2em;
   color: #999;
   text-align: center;
@@ -244,13 +322,16 @@ html.cms #cms_ui {
   font-weight: 600;
 }
 
-  #cms_ui div#page-panel h2 {
-    left: 33%;
+  #cms_ui div#page_panel h2 {
+    left: 25%;
   }
   
-  #cms_ui div#site-panel h2 {
-    left: 66%;
-    width: 34%;
+  #cms_ui div#site_panel h2 {
+    left: 50%;
+  }
+  
+  #cms_ui div#options_panel h2 {
+    left: 75%;
   }
 
 #cms_ui div.active h2 {
@@ -261,14 +342,6 @@ html.cms #cms_ui {
 #cms_ui div.panel:nth-child(1) h2 {
   left: 0;
   border-left: none;
-}
-
-#cms_ui div.panel:nth-child(2) h2 {
-  left: 33%;
-  width: 34%;
-}
-#cms_ui div.panel:nth-child(3) h2 {
-  left:67%;
 }
 
 #cms_ui p {
@@ -287,7 +360,8 @@ html.cms #cms_ui {
     border: 2px dotted #DDD;
   }
   
-#cms_ui .cms_components {
+#cms_ui .cms_components,
+#cms_ui .layouts {
   display: block;
   margin: 1em -4px 0 -2px;
   padding: 0;
@@ -295,7 +369,12 @@ html.cms #cms_ui {
   font-size: small;
 }
 
-#cms_ui .cms_components:after { 
+#cms_ui .layouts {
+  margin-top: 0;
+}
+
+#cms_ui .cms_components:after,
+#cms_ui .layouts:after { 
    content: "."; 
    visibility: hidden; 
    display: block; 
@@ -303,14 +382,20 @@ html.cms #cms_ui {
    clear: both;
 }
 
-#cms_ui .cms_components li {
+#cms_ui .cms_components li,
+#cms_ui .layouts li {
   display: block;
   float: left;
   width: 33%;
   text-align: center;
 }
 
-#cms_ui .cms_components span {
+#cms_ui .layouts li {
+  width: 25%;
+}
+
+#cms_ui .cms_components span,
+#cms_ui .layouts span {
   display: block;
   padding: 0.75em 0.25em 0.75em 0.5em;
   margin: 2px;
@@ -322,11 +407,16 @@ html.cms #cms_ui {
   cursor: pointer;
 }
 
-#cms_ui .cms_components span i {
+#cms_ui .layouts .selected span {
+  background: #0080FF;
+  color: #FFF;
+}
+
+#cms_ui .cms_components span i,
+#cms_ui .layouts span i {
   display: block;
   margin: 0 0 0.1em 0;
   font-size: 1.8em;
-  color: #666;
 }
 
 .template-zone .block-placeholder,
@@ -352,69 +442,73 @@ html.cms #cms_ui {
 
 
 .medium-toolbar-arrow-under:after {
-  top: 50px;
-  border-color: #445 transparent transparent
+  top: 60px;
+  border-color: #999 transparent transparent transparent;
 }
+
 .medium-toolbar-arrow-over:before {
   top: -8px;
-  border-color: transparent transparent #445
+  border-color: transparent transparent #999 transparent;
 }
+
 .medium-editor-toolbar {
-  border: 1px solid #334;
-  background: #445;
-  border-radius: 5px;
-  -webkit-box-shadow: 0 0 2px #333;
-  box-shadow: 0 0 2px #333;
-  -webkit-transition: top .075s ease-out,left .075s ease-out;
-  transition: top .075s ease-out,left .075s ease-out
+  background-color: #999; 
+  border-radius: 4px;
 }
-.medium-editor-toolbar li button {
-  min-width: 50px;
-  height: 50px;
-  border: 0;
-  border-left: 1px dotted #556;
+
+  .medium-editor-toolbar li {
+    padding: 0;
+  }
+  
+    .medium-editor-toolbar li button {
+      min-width: 60px;
+      height: 60px;
+      border: none;
+      border-right: 1px solid #AAA;
+      background-color: transparent;
+      color: #fff;
+      -webkit-transition: background-color 0.2s ease-in, color 0.2s ease-in;
+              transition: background-color 0.2s ease-in, color 0.2s ease-in;
+    }
+    
+      .medium-editor-toolbar li button:hover {
+        background-color: #0080FF;
+        color: #fff;
+        border-radius: 4px;
+      }
+      
+    .medium-editor-toolbar li .medium-editor-button-active {
+      background-color: #23482a;
+      color: #fff;
+    }
+    
+    .medium-editor-toolbar li .medium-editor-button-last {
+      border-right: none;
+    }
+
+.medium-editor-toolbar-form-anchor .medium-editor-toolbar-anchor-input {
+  height: 60px;
+  background: #999;
   color: #fff;
-  background: #445;
-  -webkit-transition: background-color .2s ease-in;
-  transition: background-color .2s ease-in
 }
-.medium-editor-toolbar li button:hover {
-  background-color: #000;
-  color: #ff0
-}
-.medium-editor-toolbar li .medium-editor-button-first {
-  border-top-left-radius: 5px;
-  border-bottom-left-radius: 5px
-}
-.medium-editor-toolbar li .medium-editor-button-last {
-  border-top-right-radius: 5px;
-  border-bottom-right-radius: 5px
-}
-.medium-editor-toolbar li .medium-editor-button-active {
-  color: #ff6;
-  background: #556;
-}
-.medium-editor-toolbar-form-anchor {
-  background: #445;
-  color: #999;
-  border-radius: 5px
-}
-.medium-editor-toolbar-form-anchor input {
-  height: 50px;
-  background: #445;
-  color: #ccc;
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  box-sizing: border-box
-}
+
+  .medium-editor-toolbar-form-anchor .medium-editor-toolbar-anchor-input::-webkit-input-placeholder,
+  .medium-editor-toolbar-form-anchor .medium-editor-toolbar-anchor-input:-moz-placeholder,
+  .medium-editor-toolbar-form-anchor .medium-editor-toolbar-anchor-input::-moz-placeholder,
+  .medium-editor-toolbar-form-anchor .medium-editor-toolbar-anchor-input:-ms-input-placeholder {
+    color: #fff;
+    color: rgba(255, 255, 255, 0.8);
+  }
+  
 .medium-editor-toolbar-form-anchor a {
-  color: #fff
-}
-.medium-editor-toolbar-anchor-preview {
-  background: #445;
   color: #fff;
-  border-radius: 5px
 }
+
+.medium-editor-toolbar-anchor-preview {
+  background: #999;
+  color: #333;
+}
+
 .medium-editor-placeholder:after {
-  color: #b3b3b1
+  color: #fff;
 }

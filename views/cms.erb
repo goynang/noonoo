@@ -47,7 +47,7 @@
       
       <div class="inner">
       	<form id="cms_this_page" method="post">
-      		<fieldset class="active">
+      		<fieldset>
       			<legend><span>This page</legend>
 			
       			<div>
@@ -63,18 +63,30 @@
 				
       				<p>
       					<label for="cms_this_page_template">Template</label>
-      					
+      					<select name="template" id="cms_this_page_template">
+                  <option>User</option>
+                  <option>Defined</option>
+                  <option>Templates</option>
+                  <option>Go</option>
+                  <option>Here</option>
+                </select>
       				</p>
-				
+              
       				<p>
-      					<input type="submit" value="Update">
+      					<label for="cms_this_page_template">Layout</label>
+      					<ul class="layouts">
+                  <li data-layout="one-column"><span><i class="fa fa-bars"></i> 1 column</span></li>
+                  <li class="selected" data-layout="two-column"><span><i class="fa fa-bars"></i> 2 column</span></li>
+                  <li data-layout="three-column"><span><i class="fa fa-bars"></i> 3 column</span></li>
+                  <li data-layout="four-column"><span><i class="fa fa-bars"></i> 4 column</span></li>
+                </ul>
       				</p>
       			</div>
       		</fieldset>
       	</form>
         
       	<form id="cms_new_page" method="post" action="/new">
-      		<fieldset class="active">
+      		<fieldset>
       			<legend><span>New page</legend>
 			
       			<div>
@@ -105,7 +117,7 @@
       
       <div class="inner">
       	<form id="cms_site" method="post" action="/new">
-      		<fieldset class="active">
+      		<fieldset>
       			<legend><span>Details</legend>
 			
       			<div>
@@ -132,32 +144,44 @@
       	</form>
       </div>
     </div>
+    
+    <div class="panel" id="options_panel">
+      <h2>Options</h2>
+			
+			<div class="inner">
+        
+      	<form>
+      		<fieldset>
+      			<legend><span>View options</legend>
+        
+    				<p class="checkbox">
+    					<label for="cms_show_page_zones">Show page zones</label>
+    					<input type="checkbox" name="cms_show_page_zones" value="true" id="cms_show_page_zones">
+    				</p>
+			
+    				<p class="checkbox">
+    					<label for="cms_show_template_zones">Show template zones</label>
+    					<input type="checkbox" name="cms_show_template_zones" value="true" id="cms_show_template_zones">
+    				</p>
+			
+    				<p class="checkbox">
+    					<label for="cms_show_components">Show components</label>
+    					<input type="checkbox" name="cms_show_page_content_zones" value="true" id="cms_show_components">
+    				</p>
+            
+            <p>
+              <label for="cms_preview_device">Preview as</label>
+              <select name="preview_as" id="cms_preview_device">
+                <option value="native">Your device</option>
+                <option value="phone">Mobile phone</option>
+                <option value="tablet">Tablet</option>
+                <option value="laptop">Laptop</option>
+                <option value="desktop">Desktop</option>
+              </select>
+            </p>
+          </fieldset>
+        </form>
+			</div>
+    </div>
   </div>
 </div>
-  
-  
-	<!--
-		
-		<fieldset id="cms_options">
-			<legend><span>Options</span></legend>
-			
-			<div>
-				<p>
-					<label for="cms_show_page_zones">Show page zones</label>
-					<input type="checkbox" name="cms_show_page_zones" value="true" id="cms_show_page_zones">
-				</p>
-				
-				<p>
-					<label for="cms_show_template_zones">Show template zones</label>
-					<input type="checkbox" name="cms_show_template_zones" value="true" id="cms_show_template_zones">
-				</p>
-				
-				<p>
-					<label for="cms_show_components">Show components</label>
-					<input type="checkbox" name="cms_show_page_content_zones" value="true" id="cms_show_components">
-				</p>
-			</div>
-		</fieldset>
-	</form>
-</div>
--->

@@ -5,6 +5,10 @@ body {
   background: #FFF;
 }
 
+#viewport {
+  background: #FFF;
+}
+
 #primary {
   float: left;
   width: 70%;
