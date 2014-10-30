@@ -19,6 +19,27 @@ body {
   width: 25%;
 }
 
+.span-full {
+  clear: both;
+  width: 100%;
+  
+}
+
+.span-half {
+  display: inline;
+  float: left;
+  width: 50%;
+}
+
+div[class*='span-'] {
+  padding-right: 20px;
+  box-sizing: border-box;
+}
+
+div[class*='span-']:last-of-type {
+  padding-right: 0;
+}
+
 h1, h2, h3, h4, h5, h6, legend, label, th {
   font-family: 'Arvo', serif;
   font-weight: normal;
@@ -26,13 +47,31 @@ h1, h2, h3, h4, h5, h6, legend, label, th {
 }
 
 h1, h2, h3, h4, h5, h6 {
-  margin: 0 0 1rem 0;
+  margin: 0;
 }
 
 h1 {
   border-bottom: 2px solid #C2CF29;
   padding-bottom: 0.2em;
   margin-bottom: 2rem;
+  font-size: 3em;
+}
+
+h2 {
+  font-size: 2em;
+}
+
+h3 {
+  font-size: 1.6em;
+}
+
+p {
+  margin: 0;
+  line-height: 1.33;
+}
+
+* + p {
+  margin-top: 1em;
 }
 
 blockquote {

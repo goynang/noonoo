@@ -8,18 +8,84 @@
   margin: 0 0 10px 0;
 }
 
+.resizing {
+  background-color: transparent;
+  background-image: linear-gradient(90deg, rgba(255, 128, 128, 0.05) 50%, transparent 50%);
+  background-size: 16.66% 16.66%;
+  background-position: 1rem;
+}
+  
+}
+
 .template-zone {
   outline-color: #900;
 }
 
+.template-zone:after,
+.page-zone:after { 
+   content: "."; 
+   visibility: hidden; 
+   display: block; 
+   height: 0; 
+   clear: both;
+}
+
 .component {
   position: relative;
-  background: #FFF;
   outline-color: #CCC;
   outline-style: dashed;
   outline-offset: 1px;
   outline-width: 0;
-  margin: 0 0 1em 0;
+  margin: 0 0 1rem 0;
+  padding: 0;
+  box-sizing: border-box;
+  clear: both;
+  float: none;
+}
+
+.span1,
+.span2,
+.span3,
+.span4,
+.span5,
+.span6,
+.span7,
+.span8,
+.span9,
+.span10,
+.span11 {
+  clear: none;
+  float: left;
+}
+
+.span1 { width: 8.33%; }
+.span2 { width: 16.66%; }
+.span3 { width: 25%; }
+.span4 { width: 33.33%; }
+.span5 { width: 41.66%; }
+.span6 { width: 50%; }
+.span7 { width: 58.33%; }
+.span8 { width: 66.66%; }
+.span9 { width: 75%; }
+.span10 { width: 83.33%; }
+.span11 { width: 91.66%; }
+
+@media only screen and (max-width: 480px) {
+  .span1,
+  .span2,
+  .span3,
+  .span4,
+  .span5,
+  .span6,
+  .span7,
+  .span8,
+  .span9,
+  .span10,
+  .span11 {
+    clear: both;
+    float: none;
+    width: 100% !important;
+  }
 }
 
 body.showing-page-zones .component,
@@ -46,12 +112,27 @@ body.showing-template-zones .template-zone .component {
   display: block;
   content: "";
   position: absolute;
-  top: -6px;
-  left: -6px;
-  right: -6px;
-  bottom: -6px;
-  border: 6px solid #FFF;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  border: 2px solid #FFF;
   box-shadow: 0 0 1px 3px #EEE;
+}
+
+.component .width {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  top: 0;
+  width: 4em;
+  margin: 0 -2em;
+  border-radius: 5px;
+  background: #EEE;
+  color: #333;
+  text-align: center;
+  line-height: 2em;
+  font-size: 2em;
 }
 
 .component .actions {
@@ -421,21 +502,13 @@ html.cms #cms_ui {
 
 .template-zone .block-placeholder,
 .page-zone .block-placeholder {
-  border-radius: 2px;
+  border-radius: 4px;
   list-style: none;
   display: block;
   height: 8px;
   background: #EEE;
-  margin: 2px 0;
+  margin: 1em 0;
 }
-
-.dragster {
-  border: 1px solid #999;
-  width: 5em;
-  height: 2em;
-}
-
-
 
 
 
@@ -512,3 +585,45 @@ html.cms #cms_ui {
 .medium-editor-placeholder:after {
   color: #fff;
 }
+
+.ui-resizable {
+	position: relative;
+}
+
+.ui-resizable-handle {
+	position: absolute;
+	font-size: 0.1px;
+	display: block;
+	-ms-touch-action: none;
+	touch-action: none;
+}
+
+.ui-resizable-disabled .ui-resizable-handle,
+.ui-resizable-autohide .ui-resizable-handle {
+	display: none;
+}
+
+.ui-resizable-s {
+	cursor: s-resize;
+	height: 7px;
+	width: 100%;
+	bottom: -5px;
+	left: 0;
+}
+
+.ui-resizable-e {
+	cursor: e-resize;
+	width: 7px;
+	right: -5px;
+	top: 0;
+	height: 100%;
+}
+
+.ui-resizable-se {
+	cursor: se-resize;
+	width: 12px;
+	height: 12px;
+	right: 1px;
+	bottom: 1px;
+}
+

@@ -38,6 +38,7 @@ module NooNoo
       store_in collection: "components"
         
       field :name, :type => String
+      field :klass, :type => String
       # All other fields are specific to type of component (no predetermined schema)
     end
   end

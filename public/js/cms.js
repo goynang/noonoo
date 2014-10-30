@@ -42,6 +42,10 @@ var cms = function() {
 		);
 	}
 	
+	function toggleCMS() {
+		$('html').toggleClass('cms');
+	}
+	
 	function showPageZones() {
 		$('body').addClass('showing-page-zones');
 		$('.page-zone').addClass('shown');
@@ -70,6 +74,10 @@ var cms = function() {
 		$('.component').removeClass('shown');
 	}
 	
+	function toggleComponents() {
+		$('.component').toggleClass('shown');
+	}
+	
 	function showGuides() {
 		showPageZones();
 		showTemplateZones();
@@ -90,7 +98,6 @@ var cms = function() {
 	function pageChanged() {
 		needsSave = true;
 		savePage();
-		// $('#cms_save_page').removeAttr('disabled');
 	}
 	
 	function registerEventListeners() {
@@ -101,9 +108,14 @@ var cms = function() {
 		});
 		
 		$(document).keypress(function(e) {
+			// console.log(e.which);
 			// press 'e'
 			if(e.which == 101) {
-				$('html').toggleClass('cms');
+				toggleCMS();
+			}
+			// press c
+			if(e.which == 99) {
+				toggleComponents();
 			}
 		});
 		
@@ -156,6 +168,37 @@ var cms = function() {
 			stop: hideGuides
 		});
 		
+		// Allow componets to be resized
+		$('.component').each(function() {
+			var zone = $(this).parents('.page-zone, .template-zone');
+			$(this).resizable({
+				containment: "parent",
+				autoHide: true,
+				handles: "e",
+				grid: [zone.width() / 12, 1],
+				start: function(e, ui) {
+					var widthIndicator = $('<div class="width"></div>');
+					ui.element.append(widthIndicator);
+					zone.addClass('resizing');
+				},
+				resize: function(e, ui) {
+					var columns = (ui.element.width() / zone.width()) * 12;
+					columns = columns | 0; // convert to int
+					ui.element.find('.width').text(columns + '/12');
+				},
+				stop: function(e, ui) {
+					zone.removeClass('resizing');
+					var columns = (ui.element.width() / zone.width()) * 12;
+					columns = columns | 0; // convert to int
+					ui.element.removeClass('span1 span2 span3 span4 span5 span6 span7 span8 span9 span10 span11 span12');
+					ui.element.removeAttr('style');
+					ui.element.addClass('span' + columns);
+					ui.element.find('.width').remove();
+					pageChanged();
+				}
+			});
+		});
+		
 		// Style up editable components on hover (add drag handles etc.)
 		$('.component').on('mouseenter', function() {
 			$(this).find('.actions').show();
@@ -201,21 +244,11 @@ var cms = function() {
 			var v = $(this).val();
 			currentElement.find('[data-inspectable=true]').attr(n, v);
 		});
-		
-		// Handle save request
-		$('#cms_save_page').on('click', function(event) {
-			event.preventDefault();
-			event.stopImmediatePropagation();
-			event.stopPropagation();
-			$this.savePage();
-		});
-		pageChanged();
 	}
 	
 	function init() {
 		setupEditors();
 		registerEventListeners();
-		$('#cms_save_page').attr('disabled','disabled');
 	}
 	
     // public interface
@@ -239,11 +272,7 @@ var cms = function() {
 				}
 			});
 		});
-		if (swap) {
-			$inspector.replaceWith($fields);
-		} else {
-			$inspector.replaceWith('<div class="empty">This element has no editable attributes</div>');
-		}
+		$inspector.replaceWith($fields);
 	};
 	
 	this.savePage = function() {
@@ -259,6 +288,7 @@ var cms = function() {
 				$(zoneElement).find('.component').each(function(component_index, componentElement) {
 					var component = {};
 					component.name = $(componentElement).attr('itemtype');
+					component.klass = $(componentElement).attr('class');
 					$(componentElement).find('[itemprop]').each(function(i, e) {
 						component[$(e).attr('itemprop')] = $.trim($(e).html());
 					});
@@ -270,14 +300,15 @@ var cms = function() {
 					page.zones[$(zoneElement).attr('id')] = zone;
 				}
 			});
+			// console.log(JSON.stringify(page));
 			$.post( page.path, { 'page' : JSON.stringify(page) }, "json" ).done(function( data ) {
 				needsSave = false;
-				$('#cms_save_page').attr('disabled','disabled');
 			});
 		}
 	};
 	
 	this.previewAs = function(what) {
+		$('#metaviewport').attr('content', 'width=480');
 		$('html').removeClass('native').removeClass('phone').removeClass('tablet').removeClass('laptop').removeClass('desktop');
 		$('html').addClass(what);
 	};
