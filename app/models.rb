@@ -17,7 +17,7 @@ module NooNoo
       accepts_nested_attributes_for :layout
       
       before_create do |page|
-        self.count = self.path.split('/').size - 1
+        self.depth = self.path.split('/').size - 1
       end
     end
 
