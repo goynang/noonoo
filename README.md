@@ -25,3 +25,13 @@ The masterplan
 * Super easy to use 
 * Simple workflow support (draft, publish, etc.)
 * Revision history, multiple undo, etc.
+
+Tools, libraries, and what not to think about using
+---------------------------------------------------
+
+* Knockout.js to simplify the data-binding needs (or maybe something like react?)
+* WebComponents (standard stuff rather than custom stuff) or Knockout.js 3.2's components?
+* Socket.io for real time coolness (or something via knockout.js or similar?)
+* Native JS to replace jQuery where possible (or maybe zepto.js?) - what about jQueryUI?
+
+
