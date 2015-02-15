@@ -42,10 +42,12 @@ module NooNoo
     end
 
     # Handle display of a page
+    # TODO: deal with home page on /
     get '*' do
       page = Page.find_by(path: params[:splat].join('/').to_s)
       if params[:component]
         # TODO: replace dynamically loadad component object of relevant class???!?
+        # TODO: replace with render method within the component implementation class
         component = Component.new({name: params[:component]}) 
         render_component(component, page, params)
       else
