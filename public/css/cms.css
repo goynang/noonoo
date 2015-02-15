@@ -272,8 +272,8 @@ html.cms #cms_ui {
 
 #cms_ui fieldset {
   border: none;
-  margin: 0 0 2em 0;
-  padding: 1em 0 2em 0;
+  margin: 0 0 1em 0;
+  padding: 1em 0 1em 0;
   position: relative;
   border-bottom: 2px solid #EEE;
 }
@@ -347,7 +347,7 @@ html.cms #cms_ui {
 #cms_ui input[type=submit] {
   width: 100%;
   font-size: 1.5em;
-  margin-top: 0.75em;
+  margin-top: 0.25em;
   color: #0080FF;
   font-weight: bold;
   cursor: pointer;

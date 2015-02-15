@@ -85,6 +85,16 @@
       		</fieldset>
       	</form>
         
+        <form id="cms_delete_page" method="post" action="<%= page.path %>">
+      		<fieldset>
+      			<legend><span>Delete this page</legend>
+    				<p class="submit">
+              <input type="hidden" name="_method" value="delete">
+    					<input type="submit" value="Delete">
+    				</p>
+          </fieldset>
+        </form>
+        
       	<form id="cms_new_page" method="post" action="/new">
       		<fieldset>
       			<legend><span>New page</legend>

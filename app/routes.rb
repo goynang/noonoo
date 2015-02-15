@@ -52,6 +52,14 @@ module NooNoo
         render_page(page, params)
       end
     end
+    
+    # Handle deletion of pages
+    # TODO: no auth yet!
+    delete '*' do
+      page = Page.find_by(path: params[:splat].join('/').to_s)
+      page.destroy
+      redirect '/?deleted=true'
+    end
 
   end
 end
