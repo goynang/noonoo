@@ -7,7 +7,7 @@ module NooNoo
     set :session_secret, '8uhsgfr567yujsh'
 
     # Home page
-    # TODO: What should this show/do?
+    # TODO: Make this check if homepage exists (create default one if not) - then call get '/home'
     get '/' do
       'Nothing to see here!'
     end
@@ -23,28 +23,22 @@ module NooNoo
     end
 
     # Handle creating a new page
-    # Params passed in should represent the page to create
-    # TODO: Maybe change this to simply / (although that clashes with below)
-    post "/new" do
+    # Params passed in should represent the page to create (title, layout)
+    # Upon success get redirected to freshly created page
+    # TODO: Add auth
+    post "/" do
       page = Page.new(build_page(params[:title]))
       page.layout = Layout.first # TODO: let the user select the layout they want!
       page.save
       redirect page.path
     end
-
-    # Handle changes to a page (path identifies page)
-    # TODO: Maybe change this to 'patch' as that better matches with HTTP goals
-    post "*" do
-      content_type :json
-      page = Page.find_by(path: params[:splat].join('/').to_s)
-      page.update_attributes(JSON.parse(params['page']))
-      page.to_json
-    end
-
-    # Handle display of a page
-    # TODO: deal with home page on /
+    
+    # Handle display of a page or component within context of a page
+    # Presence (or otherwise) of component param determines which
+    # Path determines page to load (either to render or give context to component)
     get '*' do
       page = Page.find_by(path: params[:splat].join('/').to_s)
+      halt 404 unless page
       if params[:component]
         # TODO: replace dynamically loadad component object of relevant class???!?
         # TODO: replace with render method within the component implementation class
@@ -54,9 +48,22 @@ module NooNoo
         render_page(page, params)
       end
     end
-    
+
+    # Handle changes to a page (path identifies page)
+    # Returns JSON representation of the page
+    # TODO: Add auth
+    patch "*" do
+      content_type :json
+      page = Page.find_by(path: params[:splat].join('/').to_s)
+      page.update_attributes(JSON.parse(params['page']))
+      page.to_json
+    end
+
     # Handle deletion of pages
-    # TODO: no auth yet!
+    # Path indicates page to delete
+    # If succesful get redirected to homepage
+    # TODO: Add auth
+    # TODO: Don't allow homepage to be deleted
     delete '*' do
       page = Page.find_by(path: params[:splat].join('/').to_s)
       page.destroy

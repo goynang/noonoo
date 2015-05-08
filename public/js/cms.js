@@ -168,7 +168,7 @@ var cms = function() {
 			stop: hideGuides
 		});
 		
-		// Allow componets to be resized
+		// Allow components to be resized
 		$('.component').each(function() {
 			var zone = $(this).parents('.page-zone, .template-zone');
 			$(this).resizable({
@@ -251,6 +251,33 @@ var cms = function() {
 		registerEventListeners();
 	}
 	
+	function serialisePage() {
+		var page = {};
+		page.path = window.location.pathname;
+		page.title = document.title;
+		page.zones = {};
+		page.layout_attributes = {};
+		page.layout_attributes.zones = {};
+		$('.template-zone, .page-zone').each(function(zone_index, zoneElement) {
+			var zone = [];
+			$(zoneElement).find('.component').each(function(component_index, componentElement) {
+				var component = {};
+				component.name = $(componentElement).attr('itemtype');
+				component.klass = $(componentElement).attr('class');
+				$(componentElement).find('[itemprop]').each(function(i, e) {
+					component[$(e).attr('itemprop')] = $.trim($(e).html());
+				});
+				zone.push(component);
+			});
+			if ($(zoneElement).hasClass('template-zone')) {
+				page.layout_attributes.zones[$(zoneElement).attr('id')] = zone;
+			} else {
+				page.zones[$(zoneElement).attr('id')] = zone;
+			}
+		});
+		return page;
+	}
+	
     // public interface
 	
 	this.inspect = function(element) {
@@ -277,31 +304,8 @@ var cms = function() {
 	
 	this.savePage = function() {
 		if (needsSave) {
-			var page = {};
-			page.path = window.location.pathname;
-			page.title = document.title;
-			page.zones = {};
-			page.layout_attributes = {};
-			page.layout_attributes.zones = {};
-			$('.template-zone, .page-zone').each(function(zone_index, zoneElement) {
-				var zone = [];
-				$(zoneElement).find('.component').each(function(component_index, componentElement) {
-					var component = {};
-					component.name = $(componentElement).attr('itemtype');
-					component.klass = $(componentElement).attr('class');
-					$(componentElement).find('[itemprop]').each(function(i, e) {
-						component[$(e).attr('itemprop')] = $.trim($(e).html());
-					});
-					zone.push(component);
-				});
-				if ($(zoneElement).hasClass('template-zone')) {
-					page.layout_attributes.zones[$(zoneElement).attr('id')] = zone;
-				} else {
-					page.zones[$(zoneElement).attr('id')] = zone;
-				}
-			});
-			// console.log(JSON.stringify(page));
-			$.post( page.path, { 'page' : JSON.stringify(page) }, "json" ).done(function( data ) {
+			var page = serialisePage();
+			$.post( page.path, { 'page' : JSON.stringify(page), '_method' : 'patch' }, "json" ).done(function( data ) {
 				needsSave = false;
 			});
 		}
