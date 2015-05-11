@@ -15,11 +15,15 @@ module NooNoo
     # Handle upload of a binary file (e.g. an image)
     # Simply store the file in a sensible location and return the location for storing in Mongo (etc.)
     # TODO: Make this more flexible (currently hard coded to only support image paths)
-    post "/upload" do 
-      File.open('public/uploads/images/' + params['file'][:filename], "w") do |f|
-        f.write(params['file'][:tempfile].read)
+    post "/upload" do
+      files = []
+      for file in params['files'] do
+        File.open('public/uploads/images/' + file[:filename], "w") do |f|
+          f.write(file[:tempfile].read)
+        end
+        files << { url: "/uploads/images/#{file[:filename]}" }
       end
-      "/uploads/images/#{params['file'][:filename]}"
+      JSON.generate({ files: files })
     end
 
     # Handle creating a new page

@@ -11,7 +11,7 @@ var cms = function() {
 	// Private functions
 	
 	function setupEditors() {
-		inlineEditor = new MediumEditor(
+		var inlineEditor = new MediumEditor(
 			'[data-editor="inline"]',
 			{
 				disableReturn: true,
@@ -21,7 +21,7 @@ var cms = function() {
 			}
 		);
 		
-		inlineEditor = new MediumEditor(
+		var blockEditor = new MediumEditor(
 			'[data-editor="block"]',
 			{
 				cleanPastedHTML: true,
@@ -30,7 +30,7 @@ var cms = function() {
 			}
 		);
 		
-		blockEditor = new MediumEditor(
+		var fullEditor = new MediumEditor(
 			'[data-editor="full"]',
 			{
 				cleanPastedHTML: true,
@@ -40,6 +40,19 @@ var cms = function() {
 				secondHeader: 'h3'
 			}
 		);
+		
+		$('[data-editor="block"]').mediumInsert({
+			editor: blockEditor,
+			enabled: true,
+			addons: {
+				images: {
+					fileUploadOptions: {
+						url: '/upload',
+						acceptFileTypes: /(\.|\/)(gif|jpe?g|png)$/i
+					},
+				}
+			}
+		});
 	}
 	
 	function toggleCMS() {
@@ -105,18 +118,6 @@ var cms = function() {
 		// Toggle CMS panels
 		$('#cms_ui .toggle').on('click', function() {
 			$('html').toggleClass('cms');
-		});
-		
-		$(document).keypress(function(e) {
-			// console.log(e.which);
-			// press 'e'
-			if(e.which == 101) {
-				toggleCMS();
-			}
-			// press c
-			if(e.which == 99) {
-				toggleComponents();
-			}
 		});
 		
 		$('#cms_preview_device').on('change', function() {

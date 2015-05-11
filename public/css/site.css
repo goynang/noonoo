@@ -87,6 +87,10 @@ div[itemtype=text] p {
   margin-top: 1em;
 }
 
+img {
+  max-width: 100%;
+}
+
 blockquote {
   border-left: 3px solid #900;
   background: #FEE;
