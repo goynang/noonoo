@@ -7,6 +7,14 @@ A little web site editor (don't you dare say CMS) based on pages, components, te
 
 Small, elegant, and surprisingly powerful.
 
+Watch it in action
+------------------
+
+[Watch a screencast of a very early version in action](https://www.youtube.com/watch?v=jb8t4iftvaM)
+
+Some piccies
+------------
+
 <img src="screenie1.png" width="100%" style="max-width: 100%;" />
 
 <img src="screenie2.png" width="100%" style="max-width: 100%;" />
