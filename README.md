@@ -19,6 +19,27 @@ Some piccies
 
 <img src="screenie2.png" width="100%" style="max-width: 100%;" />
 
+Getting started (untested instructions!)
+----------------------------------------
+
+First off you will need Ruby (and a relatively new version thereof). 
+
+Use bundler to get the necessary dependencies...
+
+        $ bundle install
+
+You'll also need Mongo installed and running. This is configured via config/mongoid.yml. Start it up via the usual...
+
+        $ mongod
+
+Then to start up the app use foreman (which will fire the Unicorn server up)...
+
+        $ foreman start
+
+If everything is working you should now be able to see it at http://0.0.0.0:5000
+
+Everything is Heroku friendly (assuming you have the MongoHQ database add-on ready to go).
+
 The masterplan
 --------------
 
