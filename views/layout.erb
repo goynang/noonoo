@@ -2,25 +2,14 @@
 <html>
 <head>
 	<title><%= page.title %></title>
-	<link href="http://fonts.googleapis.com/css?family=Arvo" rel="stylesheet" type="text/css">
 	<link rel="stylesheet" href="/css/site.css">
-  <!-- For the CMS interface... -->
-  <link href="//netdna.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="/css/cms.css">
-	<link rel="stylesheet" href="/vendor/medium-editor.min.css">
+	<meta name="viewport" content="width=device-width,initial-scale=1">
 </head>
-<body>
-  <div id="viewport">
+<body class="columns-<%= page.columns %>">
+<div id="viewport">
 	<%= yield %>
-  </div>
-  <!-- For the CMS interface... -->
-  <%= erb :cms, locals: {page: page} %>
-	<script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
-	<script src="/vendor/jquery-ui-1.10.4.custom.min.js"></script>
-	<script src="/vendor/medium-editor.min.js"></script>
-	<script src="/js/cms.js"></script>
+</div>
+<%# TODO: Replace with someting like <cms:ui /> %>
+<%= erb :cms, locals: {page: page} %>
 </body>
 </html>
-
-
-

@@ -1,18 +1,18 @@
 .page-zone,
 .template-zone {
-  min-height: 1em;
   outline-color: #090;
   outline-style: dotted;
-  outline-offset: 3px;
+  outline-offset: 0.2em;
   outline-width: 0;
-  margin: 0 0 10px 0;
+  position: relative;
+  overflow: visible;
 }
 
 .resizing {
   background-color: transparent;
   background-image: linear-gradient(90deg, rgba(255, 128, 128, 0.05) 50%, transparent 50%);
-  background-size: 16.66% 16.66%;
-  background-position: 1rem;
+  background-size: 16.67% 16.67%;
+  background-position: 0px;
 }
 
 .template-zone {
@@ -28,62 +28,33 @@
    clear: both;
 }
 
-.component {
-  position: relative;
-  outline-color: #DDD;
-  outline-style: solid;
-  outline-offset: 2px;
-  outline-width: 0;
-  margin: 0 0 1rem 0;
-  padding: 0;
-  box-sizing: border-box;
-  clear: both;
-  float: none;
+body.showing-page-zones .page-zone:before,
+body.showing-template-zones .template-zone:before,
+div.shown:before {
+  content: attr(id);
+  display: block;
+  padding: 0.2em 1em;
+  border-radius: 0 0 0 3px;
+  font-size: 0.8em;
+  background: #090;
+  color: #FFF;
+  position: absolute;
+  top: -0.2em;
+  right: -0.2em;
+  line-height: 1em;
+  z-index: 51;
 }
 
-.span1,
-.span2,
-.span3,
-.span4,
-.span5,
-.span6,
-.span7,
-.span8,
-.span9,
-.span10,
-.span11 {
-  clear: none;
-  float: left;
+body.showing-template-zones .template-zone:before {
+  background: #900;
 }
 
-.span1 { width: 8.33%; }
-.span2 { width: 16.66%; }
-.span3 { width: 25%; }
-.span4 { width: 33.33%; }
-.span5 { width: 41.66%; }
-.span6 { width: 50%; }
-.span7 { width: 58.33%; }
-.span8 { width: 66.66%; }
-.span9 { width: 75%; }
-.span10 { width: 83.33%; }
-.span11 { width: 91.66%; }
-
-@media only screen and (max-width: 480px) {
-  .span1,
-  .span2,
-  .span3,
-  .span4,
-  .span5,
-  .span6,
-  .span7,
-  .span8,
-  .span9,
-  .span10,
-  .span11 {
-    clear: both;
-    float: none;
-    width: 100% !important;
-  }
+div.component.shown:before {
+  background: #009;
+  content: attr(itemtype);
+  right: auto;
+  left: -0.2em;
+  border-radius: 0 0 3px 0;
 }
 
 body.showing-page-zones .component,
@@ -102,7 +73,7 @@ body.showing-template-zones .template-zone .component {
 
 .component:hover {
   z-index: 1000;
-  background-color: #FFF;
+  background-color: rgba(255,255,255,0.5);
 }
 
 .component:hover:after {
@@ -111,10 +82,10 @@ body.showing-template-zones .template-zone .component {
   display: block;
   content: "";
   position: absolute;
-  top: -3px;
-  left: -3px;
-  right: -3px;
-  bottom: -3px;
+  top: 0;
+  left: 0;
+  right: -0;
+  bottom: 0;
   border: 3px solid #FFF;
   box-shadow: 0 0 0 3px #EEE;
 }
@@ -217,7 +188,7 @@ html.cms {
 }
 
 html.cms body {
-
+  margin: 1em;
 }
 
 #cms_ui {
@@ -245,14 +216,14 @@ html.cms #cms_ui {
   position: absolute;
   top: 50%;
   margin: -2em 0 0 0;
-  left: -1.25em;
+  left: -3em;
   background: #EEE;
-  color: #FFF;
+  color: #999;
   border-radius: 4px 0 0 4px;
-  width: 1em;
-  height: 3em;
-  padding: 0 0 0 0.25em;
-  line-height: 3em;
+  width: 3em;
+  height: 4em;
+  padding: 0;
+  line-height: 4em;
   text-align: center;
   cursor: pointer;
   font-weight: bold;
@@ -441,7 +412,7 @@ html.cms #cms_ui {
   }
   
 #cms_ui .cms_components,
-#cms_ui .layouts {
+#cms_ui .columns {
   display: block;
   margin: 1em -4px 0 -2px;
   padding: 0;
@@ -449,12 +420,12 @@ html.cms #cms_ui {
   font-size: small;
 }
 
-#cms_ui .layouts {
+#cms_ui .columns {
   margin-top: 0;
 }
 
 #cms_ui .cms_components:after,
-#cms_ui .layouts:after { 
+#cms_ui .columns:after { 
    content: "."; 
    visibility: hidden; 
    display: block; 
@@ -463,19 +434,19 @@ html.cms #cms_ui {
 }
 
 #cms_ui .cms_components li,
-#cms_ui .layouts li {
+#cms_ui .columns li {
   display: block;
   float: left;
   width: 33%;
   text-align: center;
 }
 
-#cms_ui .layouts li {
+#cms_ui .columns li {
   width: 25%;
 }
 
 #cms_ui .cms_components span,
-#cms_ui .layouts span {
+#cms_ui .columns span {
   display: block;
   padding: 0.75em 0.25em 0.75em 0.5em;
   margin: 2px;
@@ -487,13 +458,13 @@ html.cms #cms_ui {
   cursor: pointer;
 }
 
-#cms_ui .layouts .selected span {
+#cms_ui .columns .active span {
   background: #0080FF;
   color: #FFF;
 }
 
 #cms_ui .cms_components span i,
-#cms_ui .layouts span i {
+#cms_ui .columns span i {
   display: block;
   margin: 0 0 0.1em 0;
   font-size: 1.8em;

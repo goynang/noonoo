@@ -15,12 +15,12 @@ module NooNoo
     private
 
       def self.getTopLevelPages
-        Page.where(depth: 1).only(:path, :title)
+        Page.where(depth: 1).and(show_in_menus: true).only(:path, :label)
       end
       
       def self.getChildPages(page)
         regexp = Regexp.new("#{page.path}/.*")
-        Page.where(path: regexp).only(:path, :title)
+        Page.where(path: regexp).and(show_in_menus: true).only(:path, :label)
       end
       
     end

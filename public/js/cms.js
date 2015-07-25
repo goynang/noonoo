@@ -1,12 +1,12 @@
 String.prototype.capitalize = function() {
-    return this.charAt(0).toUpperCase() + this.slice(1);
+	return this.charAt(0).toUpperCase() + this.slice(1);
 };
 
 var cms = function() {
 	
 	// Private variables
 
-    var $this = this, currentElement = null, needsSave = false;
+	var $this = this, currentElement = null, needsSave = false;
 	
 	// Private functions
 	
@@ -44,6 +44,10 @@ var cms = function() {
 	
 	function toggleCMS() {
 		$('html').toggleClass('cms');
+	}
+	
+	function revealCMS() {
+		$('#cms_ui').delay(500).fadeIn(1000);
 	}
 	
 	function showPageZones() {
@@ -91,13 +95,22 @@ var cms = function() {
 	}
 	
 	function openPanel(panel) {
-		panel.parents('.panels').find('.active').removeClass('active');
+		panel.parents('.panels').find('div.active.panel').removeClass('active');
 		panel.addClass('active');
 	}
 	
 	function pageChanged() {
 		needsSave = true;
-		savePage();
+		savePage(serialisePage());
+	}
+	
+	function loadStyles() {
+		// FontAwesome for icons etc.
+		$('<link>').appendTo('head').attr({type : 'text/css', rel : 'stylesheet'}).attr('href', '//netdna.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css');
+		// Main CMS UI styles...
+		$('<link>').appendTo('head').attr({type : 'text/css', rel : 'stylesheet'}).attr('href', '/css/cms.css');
+		// Styles used by editor (context pop-ups etc.)...
+		$('<link>').appendTo('head').attr({type : 'text/css', rel : 'stylesheet'}).attr('href', '/vendor/medium-editor.min.css');
 	}
 	
 	function registerEventListeners() {
@@ -105,18 +118,6 @@ var cms = function() {
 		// Toggle CMS panels
 		$('#cms_ui .toggle').on('click', function() {
 			$('html').toggleClass('cms');
-		});
-		
-		$(document).keypress(function(e) {
-			// console.log(e.which);
-			// press 'e'
-			if(e.which == 101) {
-				toggleCMS();
-			}
-			// press c
-			if(e.which == 99) {
-				toggleComponents();
-			}
 		});
 		
 		$('#cms_preview_device').on('change', function() {
@@ -148,7 +149,7 @@ var cms = function() {
 			start: showGuides,
 			stop: hideGuides
 		});
-    
+	
 		// Allow components to be sorted
 		$('.page-zone, .template-zone').sortable({
 			placeholder: 'block-placeholder',
@@ -170,25 +171,29 @@ var cms = function() {
 		
 		// Allow components to be resized
 		$('.component').each(function() {
-			var zone = $(this).parents('.page-zone, .template-zone');
-			$(this).resizable({
+			$element = $(this);
+			var zone = $element.parents('.page-zone, .template-zone');
+			var gutterWidth = 20; // Must match CSS
+			var containerWidth = zone.width();
+			var columnWidth = (containerWidth / 12);
+			$element.resizable({
 				containment: "parent",
 				autoHide: true,
 				handles: "e",
-				grid: [zone.width() / 12, 1],
+				grid: [columnWidth, 1], // TODO: wrong if page changes size (e.g. panel open) after init
 				start: function(e, ui) {
 					var widthIndicator = $('<div class="width"></div>');
 					ui.element.append(widthIndicator);
 					zone.addClass('resizing');
 				},
 				resize: function(e, ui) {
-					var columns = (ui.element.width() / zone.width()) * 12;
+					var columns = 1.0 * ui.element.width() / columnWidth;
 					columns = columns | 0; // convert to int
 					ui.element.find('.width').text(columns + '/12');
 				},
 				stop: function(e, ui) {
 					zone.removeClass('resizing');
-					var columns = (ui.element.width() / zone.width()) * 12;
+					var columns = 1.0 * ui.element.width() / columnWidth;
 					columns = columns | 0; // convert to int
 					ui.element.removeClass('span1 span2 span3 span4 span5 span6 span7 span8 span9 span10 span11 span12');
 					ui.element.removeAttr('style');
@@ -206,6 +211,7 @@ var cms = function() {
 			$(this).find('.actions').hide();
 		});
 		
+		// Remove a component from the page
 		$('.component').on('click', '.remove', function() {
 			$(this).parents('.component').remove();
 			pageChanged();
@@ -238,23 +244,46 @@ var cms = function() {
 			}
 		});
 		
+		// Set number of columns for page
+		$('#cms_this_page_columns li').on('click', function() {
+			var columns = $(this).attr('data-columns');
+			
+			$('body').removeClass( "columns-1 columns-2 columns-3 columns-4" ).addClass( "columns-" + columns );
+			$('#cms_this_page_columns li').removeClass('active');
+			$('#cms_this_page_columns [data-columns='+columns+']').addClass('active');
+			
+			var page = {};
+			page.columns = columns;
+			needsSave = true;
+			savePage(page);
+		});
+		
 		// Handle inspector based changes
 		$('#cms_inspector').on('blur', 'input', function() {
 			var n = $(this).attr('name');
 			var v = $(this).val();
 			currentElement.find('[data-inspectable=true]').attr(n, v);
+			pageChanged();
+		});
+		
+		// Handle page info changes
+		$('#cms_this_page').on('blur', 'input, textarea', function() {
+			pageChanged();	
 		});
 	}
 	
 	function init() {
+		loadStyles();
 		setupEditors();
 		registerEventListeners();
+		revealCMS();
 	}
 	
 	function serialisePage() {
 		var page = {};
 		page.path = window.location.pathname;
-		page.title = document.title;
+		page.title = $('#cms_this_page_title').val();
+		page.label = $('#cms_this_page_label').val();
 		page.zones = {};
 		page.layout_attributes = {};
 		page.layout_attributes.zones = {};
@@ -278,7 +307,7 @@ var cms = function() {
 		return page;
 	}
 	
-    // public interface
+	// public interface
 	
 	this.inspect = function(element) {
 		currentElement = element;
@@ -290,8 +319,8 @@ var cms = function() {
 		// TODO: this doesn't really deal with multiple elements properly
 		element.find('[data-inspectable=true]').each(function() {
 			$.each(this.attributes, function() {
-				if(this.specified && this.name != 'data-inspectable') {
-					$fieldPrototype.find('label').text(this.name);
+				if(this.specified && this.name != 'data-inspectable' && this.name != 'class') {
+					$fieldPrototype.find('label').text(this.name.replace('data-',''));
 					$fieldPrototype.find('input').attr('name', this.name);
 					$fieldPrototype.find('input').attr('value', this.value);
 					$fields.append($fieldPrototype.clone());
@@ -302,9 +331,8 @@ var cms = function() {
 		$inspector.replaceWith($fields);
 	};
 	
-	this.savePage = function() {
+	this.savePage = function(page) {
 		if (needsSave) {
-			var page = serialisePage();
 			$.post( page.path, { 'page' : JSON.stringify(page), '_method' : 'patch' }, "json" ).done(function( data ) {
 				needsSave = false;
 			});
@@ -323,5 +351,5 @@ var cms = function() {
 
 	// Initialisation
 	
-	init();	
+	init(); 
 }();

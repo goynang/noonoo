@@ -4,23 +4,7 @@ require 'json'
 module NooNoo
   class App < Sinatra::Application
 
-    set :session_secret, '8uhsgfr567yujsh'
-
-    # Home page
-    # TODO: Make this check if homepage exists (create default one if not) - then call get '/home'
-    get '/' do
-      'Nothing to see here!'
-    end
-
-    # Handle upload of a binary file (e.g. an image)
-    # Simply store the file in a sensible location and return the location for storing in Mongo (etc.)
-    # TODO: Make this more flexible (currently hard coded to only support image paths)
-    post "/upload" do 
-      File.open('public/uploads/images/' + params['file'][:filename], "w") do |f|
-        f.write(params['file'][:tempfile].read)
-      end
-      "/uploads/images/#{params['file'][:filename]}"
-    end
+    set :session_secret, 'notasecret'
 
     # Handle creating a new page
     # Params passed in should represent the page to create (title, layout)

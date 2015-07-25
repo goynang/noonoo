@@ -1,197 +1,192 @@
-<div id="cms_ui">
-  
-  <div class="toggle">i</div>
-  
-  <div class="panels">
-    
-    <div class="active panel" id="element_panel">
-      <h2>Element</h2>
-      
-      <div class="inner">
-        <form id="cms_inspector">
-          <fieldset>
-            <legend><span>Element</span></legend>
-            <div class="empty">Click on an element to see its details here</div>
-          </fieldset>
-        </form>
-        
-        <div id="cms_components">
-          <h3>Drag a new element to your page</h3>
-          <ol class="cms_components">
-            <li data-component="page-title"><span><i class="fa fa-header"></i> Page title</span></li>
-            <li data-component="heading"><span><i class="fa fa-header"></i> Heading</span></li>
-            <li data-component="subheading"><span><i class="fa fa-header"></i> Subheading</span></li>
+<div id="cms_ui" style="display: none;">
+	
+	<div class="toggle"><span><i class="fa fa-pencil"></i></span></div>
+	
+	<div class="panels">
+	
+	<div class="active panel" id="element_panel">
+		<h2>Element</h2>
+		
+		<div class="inner">
+		<form id="cms_inspector">
+			<fieldset>
+			<legend><span>Element</span></legend>
+			<div class="empty">Click on an element to see its details here</div>
+			</fieldset>
+		</form>
+		
+		<div id="cms_components">
+			<h3>Drag a new element to your page</h3>
+			<ol class="cms_components">
+				<li data-component="page-title"><span><i class="fa fa-header"></i> Page title</span></li>
+				<li data-component="heading"><span><i class="fa fa-header"></i> Heading</span></li>
+				<li data-component="subheading"><span><i class="fa fa-header"></i> Subheading</span></li>
 
-            <li data-component="text"><span><i class="fa fa-font"></i> Text</span></li>
-            <li data-component="quote"><span><i class="fa fa-quote-left"></i> Quote</span></li>
-            <li data-component="list"><span><i class="fa fa-list"></i> List</span></li>
+				<li data-component="text"><span><i class="fa fa-font"></i> Text</span></li>
+				<li data-component="quote"><span><i class="fa fa-quote-left"></i> Quote</span></li>
+				<li data-component="list"><span><i class="fa fa-list"></i> List</span></li>
 
-            <li data-component="image"><span><i class="fa fa-picture-o"></i> Image</span></li>
-            <li data-component="audio"><span><i class="fa fa-volume-up"></i> Audio</span></li>
-            <li data-component="video"><span><i class="fa fa-video-camera"></i> Video</span></li>
+				<li data-component="image"><span><i class="fa fa-picture-o"></i> Image</span></li>
+				<li data-component="audio"><span><i class="fa fa-volume-up"></i> Audio</span></li>
+				<li data-component="video"><span><i class="fa fa-video-camera"></i> Video</span></li>
 
-            <li data-component="table"><span><i class="fa fa-table"></i> Table</span></li>
-            <li data-component="map"><span><i class="fa fa-map-marker"></i> Map</span></li>
-            <li data-component="menu"><span><i class="fa fa-bars"></i> Menu</span></li>
-
-            <li data-component="chart"><span><i class="fa fa-bar-chart-o"></i> Chart</span></li>
-            <li data-component="sitemap"><span><i class="fa fa-sitemap"></i> Sitemap</span></li>
-            <li data-component="comments"><span><i class="fa fa-comments"></i> Comments</span></li>
-          </ol>
-        </div>
-      </div>
-    </div>
-    
-    <div class="panel" id="page_panel">
-      <h2>Page</h2>
-      
-      <div class="inner">
-      	<form id="cms_this_page" method="post">
-      		<fieldset>
-      			<legend><span>This page</legend>
+				<li data-component="chart"><span><i class="fa fa-bar-chart-o"></i> Chart</span></li>
+				<li data-component="map"><span><i class="fa fa-map-marker"></i> Map</span></li>
+				<li data-component="file"><span><i class="fa fa-file"></i> File</span></li>
+				
+				<li data-component="table"><span><i class="fa fa-table"></i> Table</span></li>
+				<li data-component="menu"><span><i class="fa fa-bars"></i> Menu</span></li>
+				<li data-component="sitemap"><span><i class="fa fa-sitemap"></i> Sitemap</span></li>
+			</ol>
+		</div>
+		</div>
+	</div>
+	
+	<div class="panel" id="page_panel">
+		<h2>Page</h2>
+		
+		<div class="inner">
+		<form id="cms_this_page" method="post">
+			<fieldset>
+				<legend><span>This page</legend>
 			
-      			<div>
-      				<p>
-      					<label for="cms_this_page_title">Page title</label>
-      					<input type="text" name="title" value="<%= page.title %>" id="cms_this_page_title">
-      				</p>
-              
-      				<p>
-      					<label for="cms_this_page_description">Description</label>
-      					<textarea name="description" id="cms_this_page_description"></textarea>
-      				</p>
+				<div>
+					<p>
+						<label for="cms_this_page_title">Page title</label>
+						<input type="text" name="title" value="<%= page.title %>" id="cms_this_page_title">
+					</p>
+					
+					<p>
+						<label for="cms_this_page_label">Menu label</label>
+						<input type="text" name="label" value="<%= page.label %>" id="cms_this_page_label">
+					</p>
 				
-      				<p>
-      					<label for="cms_this_page_template">Template</label>
-      					<select name="template" id="cms_this_page_template">
-                  <option>User</option>
-                  <option>Defined</option>
-                  <option>Templates</option>
-                  <option>Go</option>
-                  <option>Here</option>
-                </select>
-      				</p>
-              
-      				<p>
-      					<label for="cms_this_page_template">Layout</label>
-      					<ul class="layouts">
-                  <li data-layout="one-column"><span><i class="fa fa-bars"></i> 1 column</span></li>
-                  <li class="selected" data-layout="two-column"><span><i class="fa fa-bars"></i> 2 column</span></li>
-                  <li data-layout="three-column"><span><i class="fa fa-bars"></i> 3 column</span></li>
-                  <li data-layout="four-column"><span><i class="fa fa-bars"></i> 4 column</span></li>
-                </ul>
-      				</p>
-      			</div>
-      		</fieldset>
-      	</form>
-        
-        <form id="cms_delete_page" method="post" action="<%= page.path %>">
-      		<fieldset>
-      			<legend><span>Delete this page</legend>
-    				<p class="submit">
-              <input type="hidden" name="_method" value="delete">
-    					<input type="submit" value="Delete">
-    				</p>
-          </fieldset>
-        </form>
-        
-      	<form id="cms_new_page" method="post" action="/new">
-      		<fieldset>
-      			<legend><span>New page</legend>
+					<p>
+						<label for="cms_this_page_description">Description</label>
+						<textarea name="description" id="cms_this_page_description"></textarea>
+					</p>
+				
+					<p>
+						<label for="cms_this_page_columns">Columns</label>
+						<ul class="columns" id="cms_this_page_columns">
+							<li data-columns="1" <%= 'class="active"' if page.columns == 1 %>><span><i class="fa fa-bars"></i> 1 column</span></li>
+							<li data-columns="2" <%= 'class="active"' if page.columns == 2 %>><span><i class="fa fa-bars"></i> 2 column</span></li>
+							<li data-columns="3" <%= 'class="active"' if page.columns == 3 %>><span><i class="fa fa-bars"></i> 3 column</span></li>
+							<li data-columns="4" <%= 'class="active"' if page.columns == 4 %>><span><i class="fa fa-bars"></i> 4 column</span></li>
+						</ul>
+					</p>
+				</div>
+			</fieldset>
+		</form>
+		
+		<form id="cms_delete_page" method="post" action="<%= page.path %>">
+			<fieldset>
+				<legend><span>Delete this page</legend>
+					<p class="submit">
+						<input type="hidden" name="_method" value="delete">
+						<input type="submit" value="Delete">
+					</p>
+			</fieldset>
+		</form>
+		
+		<form id="cms_new_page" method="post" action="/">
+			<fieldset>
+				<legend><span>New page</legend>
 			
-      			<div>
-      				<p>
-      					<label for="cms_new_page_title">Page title</label>
-      					<input type="text" name="title" value="" id="cms_new_page_title">
-      				</p>
+				<div>
+					<p>
+						<label for="cms_new_page_title">Page title</label>
+						<input type="text" name="title" value="" id="cms_new_page_title">
+					</p>
 				
-      				<p>
-      					<label for="cms_new_page_location">Location</label>
-      					<select name="location" id="cms_new_page_location">
-      						<option value="sibling">Next to this page</option>
-      						<option value="child">Underneath this page</option>
-      					</select>
-      				</p>
+					<p>
+						<label for="cms_new_page_location">Location</label>
+						<select name="location" id="cms_new_page_location">
+							<option value="sibling">Next to this page</option>
+							<option value="child">Underneath this page</option>
+						</select>
+					</p>
 				
-      				<p>
-      					<input type="submit" value="Create">
-      				</p>
-      			</div>
-      		</fieldset>
-      	</form>
-      </div>
-    </div>
-    
-    <div class="panel" id="site_panel">
-      <h2>Site</h2>
-      
-      <div class="inner">
-      	<form id="cms_site" method="post" action="/new">
-      		<fieldset>
-      			<legend><span>Details</legend>
+					<p>
+						<input type="submit" value="Create">
+					</p>
+				</div>
+			</fieldset>
+		</form>
+		</div>
+	</div>
+	
+	<div class="panel" id="site_panel">
+		<h2>Site</h2>
+		
+		<div class="inner">
+		<form id="cms_site" method="post" action="/new">
+			<fieldset>
+				<legend><span>Details</legend>
 			
-      			<div>
-      				<p>
-      					<label for="cms_site_title">Site title</label>
-      					<input type="text" name="title" value="<%= page.title %>" id="cms_site_title">
-      				</p>
-              
-      				<p>
-      					<label for="cms_site_description">Description</label>
-      					<textarea name="description" id="cms_site_description"></textarea>
-      				</p>
+				<div>
+					<p>
+						<label for="cms_site_title">Site title</label>
+						<input type="text" name="title" value="<%= page.title %>" id="cms_site_title">
+					</p>
 				
-      				<p>
-      					<label for="cms_site_theme">Theme</label>
-      					
-      				</p>
+					<p>
+						<label for="cms_site_description">Description</label>
+						<textarea name="description" id="cms_site_description"></textarea>
+					</p>
 				
-      				<p>
-      					<input type="submit" value="Update">
-      				</p>
-      			</div>
-      		</fieldset>
-      	</form>
-      </div>
-    </div>
-    
-    <div class="panel" id="options_panel">
-      <h2>Options</h2>
+					<p>
+						<label for="cms_site_theme">Theme</label>
+						
+					</p>
+				
+					<p>
+						<input type="submit" value="Update">
+					</p>
+				</div>
+			</fieldset>
+		</form>
+		</div>
+	</div>
+	
+	<div class="panel" id="options_panel">
+		<h2>Options</h2>
 			
 			<div class="inner">
-        
-      	<form>
-      		<fieldset>
-      			<legend><span>View options</legend>
-        
-    				<p class="checkbox">
-    					<label for="cms_show_page_zones">Show page zones</label>
-    					<input type="checkbox" name="cms_show_page_zones" value="true" id="cms_show_page_zones">
-    				</p>
+		
+		<form>
+			<fieldset>
+				<legend><span>View options</legend>
+		
+					<p class="checkbox">
+						<label for="cms_show_page_zones">Show page zones</label>
+						<input type="checkbox" name="cms_show_page_zones" value="true" id="cms_show_page_zones">
+					</p>
 			
-    				<p class="checkbox">
-    					<label for="cms_show_template_zones">Show template zones</label>
-    					<input type="checkbox" name="cms_show_template_zones" value="true" id="cms_show_template_zones">
-    				</p>
+					<p class="checkbox">
+						<label for="cms_show_template_zones">Show template zones</label>
+						<input type="checkbox" name="cms_show_template_zones" value="true" id="cms_show_template_zones">
+					</p>
 			
-    				<p class="checkbox">
-    					<label for="cms_show_components">Show components</label>
-    					<input type="checkbox" name="cms_show_page_content_zones" value="true" id="cms_show_components">
-    				</p>
-            
-            <p>
-              <label for="cms_preview_device">Preview as</label>
-              <select name="preview_as" id="cms_preview_device">
-                <option value="native">Your device</option>
-                <option value="phone">Mobile phone</option>
-                <option value="tablet">Tablet</option>
-                <option value="laptop">Laptop</option>
-                <option value="desktop">Desktop</option>
-              </select>
-            </p>
-          </fieldset>
-        </form>
-			</div>
-    </div>
-  </div>
+					<p class="checkbox">
+						<label for="cms_show_components">Show components</label>
+						<input type="checkbox" name="cms_show_page_content_zones" value="true" id="cms_show_components">
+					</p>
+			
+			<p>
+				<label for="cms_preview_device">Preview as</label>
+				<select name="preview_as" id="cms_preview_device">
+					<option value="native">Your device</option>
+					<option value="phone">Mobile phone</option>
+					<option value="tablet">Tablet</option>
+					<option value="laptop">Laptop</option>
+					<option value="desktop">Desktop</option>
+				</select>
+			</p>
+		</fieldset>
+		</form>
+		</div>
+	</div>
+	</div>
 </div>
+<script src="/js/init.js"></script>
