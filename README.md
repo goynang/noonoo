@@ -33,6 +33,7 @@ The masterplan
 * Super easy to use 
 * Simple workflow support (draft, publish, etc.)
 * Revision history, multiple undo, etc.
+* Integration with CRMs etc. via prebuilt components
 
 Tools, libraries, and what not to think about using
 ---------------------------------------------------
@@ -41,5 +42,21 @@ Tools, libraries, and what not to think about using
 * WebComponents (standard stuff rather than custom stuff) or Knockout.js 3.2's components?
 * Socket.io for real time coolness (or something via knockout.js or similar?)
 * Native JS to replace jQuery where possible (or maybe zepto.js?) - what about jQueryUI?
+* Radius for simpler templating (bit like JSP action files)
 
+TODOs
+-----
 
+* Stick to consitent name for elements (or components?)
+* Swap in nicer templating (logic-less as possible)
+* Work out how to store non-visual data with an element (stuff not exposed into HTML)
+* Improve element inspecting (so can deal with nested HTML/attributes)
+* Allow saving and re-application of custom user generated layouts (templates?)
+* Inter-element communication (some kind of shared scope thing?) - classic e.g. filter and list
+* Caching?!? How (for e.g.) avoid going to CRM API on every page load?
+* How allow elements to do more than just display content? How allow input? e.g. update user details form
+
+Woe
+---
+
+Need a much better way of wiring interface elements that allow you to change the state of the page to the things that are affected by them. Otherwise it will become a big jumble of jQuery selectors to keep everything in sync - if it isn't already. Is there way react.js could help (or something similar)?
