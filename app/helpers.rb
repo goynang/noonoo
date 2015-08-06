@@ -15,7 +15,7 @@ module NooNoo
       {
         'path' => slugify(title),
         'title' => title,
-        'content' => { 'primary' => [], 'secondary' => []}
+        'zones' => { 'primary' => [], 'secondary' => []}
       }
     end
     
