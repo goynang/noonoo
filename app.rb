@@ -65,7 +65,7 @@ module NooNoo
         layout: NooNoo::Models::Layout.create({
           title: 'Default',
           zones: {
-            nav:[{name: 'menu'}],
+            nav:[{name: 'menu', depth: 1}],
             heading:[{name: 'page-title'}],
             foot:[]
           }

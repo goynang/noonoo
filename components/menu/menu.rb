@@ -3,26 +3,12 @@ module NooNoo
     class Menu
 
       def self.render(component, page, request)
-        pages = nil
-        if component['show'] == 'children'
-          pages = getChildPages(page)
-        else
-          pages = getTopLevelPages
-        end
+        depth = component['depth'].to_i
+        path_regexp = Regexp.new(page.path_parts[0..(depth-1)].join('/') + '.*')
+        pages = Page.where(path: path_regexp).and(depth: depth).and(show_in_menus: true).only(:path, :label)
         {page: page, component: component, pages: pages}
       end
-  
-    private
 
-      def self.getTopLevelPages
-        Page.where(depth: 1).and(show_in_menus: true).only(:path, :label)
-      end
-      
-      def self.getChildPages(page)
-        regexp = Regexp.new("#{page.path}/.*")
-        Page.where(path: regexp).and(show_in_menus: true).only(:path, :label)
-      end
-      
     end
   end
 end
