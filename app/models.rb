@@ -28,6 +28,10 @@ module NooNoo
       before_create do |page|
         self.depth = self.path.split('/').size - 1 unless self.depth
       end
+      
+      def path_parts
+        self.path.split('/')
+      end
     end
 
     class Layout
