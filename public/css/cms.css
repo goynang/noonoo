@@ -71,12 +71,13 @@ body.showing-template-zones .template-zone .component {
   outline-width: 1px;
 }
 
-.component:hover {
-  z-index: 1000;
-  background-color: rgba(255,255,255,0.5);
+.component:hover,
+.current {
+  z-index: 1000 !important;
+  background-color: rgba(255,255,255,0.5) !important;
 }
-
-.component:hover:after {
+.component:hover:after,
+.current:after  {
   z-index: -2;
   border-radius: 4px;
   display: block;
@@ -87,7 +88,7 @@ body.showing-template-zones .template-zone .component {
   right: -0;
   bottom: 0;
   border: 3px solid #FFF;
-  box-shadow: 0 0 0 3px #EEE;
+  box-shadow: 0 0 0 3px #EEE !important;
 }
 
 .component .width {
@@ -95,14 +96,14 @@ body.showing-template-zones .template-zone .component {
   top: 0;
   left: 50%;
   top: 0;
-  width: 4em;
-  margin: 0 -2em;
-  border-radius: 5px;
+  width: 3em;
+  margin: 0 -1.5em;
+  border-radius: 0 0 4px 4px;
   background: #EEE;
   color: #333;
   text-align: center;
-  line-height: 2em;
-  font-size: 2em;
+  line-height: 1.5em;
+  font-size: 1.5em;
 }
 
 .component .actions {
@@ -215,11 +216,11 @@ html.cms #cms_ui {
 #cms_ui .toggle {
   position: absolute;
   top: 50%;
-  margin: -2em 0 0 0;
+  margin: -2.1em 0 0 0;
   left: -3em;
-  background: #EEE;
+  background: #F4F4F4;
   color: #999;
-  border-radius: 4px 0 0 4px;
+  border-radius: 5px 0 0 5px;
   width: 3em;
   height: 4em;
   padding: 0;
@@ -227,6 +228,9 @@ html.cms #cms_ui {
   text-align: center;
   cursor: pointer;
   font-weight: bold;
+  border: 1px solid #DDD;
+  border-right: 3px solid #F4F4F4;
+  box-shadow: inset 2px 2px 2px #EEE;
 }
 
 #cms_ui .tools {
@@ -245,7 +249,7 @@ html.cms #cms_ui {
   margin: 0 0 1em 0;
   padding: 1em 0 1em 0;
   position: relative;
-  border-bottom: 2px solid #EEE;
+  border-bottom: 1px solid #EEE;
 }
 
 #cms_ui legend,
@@ -268,9 +272,8 @@ html.cms #cms_ui {
 #cms_ui textarea {
   width: 100%;
   padding: 0.33em;
-  border: 2px solid #CCC;
+  border: 1px solid #CCC;
   margin: 0;
-  border-radius: 4px;
   box-sizing: border-box;
   font-size: 1em;
 }
@@ -296,16 +299,6 @@ html.cms #cms_ui {
 
 #cms_ui .checkbox label {
   padding-left: 2em;
-}
-
-#cms_ui input[type=text],
-#cms_ui textarea {
-  outline: none !important;
-}
-
-#cms_ui input[type=text]:focus,
-#cms_ui textarea:focus {
-  border-color: #0080FF;
 }
 
 #cms_ui select {

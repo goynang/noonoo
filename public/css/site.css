@@ -214,7 +214,7 @@ table th {
   color: #FFF;
 }
 
-ul.menu {
+#nav ul.menu {
   display: block;
   list-style: none;
   margin: 0;
@@ -223,24 +223,24 @@ ul.menu {
   border-bottom: 3px solid #C2CF29;
 }
 
-ul.menu:before,
-ul.menu:after {
+#nav ul.menu:before,
+#nav ul.menu:after {
   content: " "; /* 1 */
   display: table; /* 2 */
 }
 
-ul.menu:after {
+#nav ul.menu:after {
   clear: both;
 }
 
-ul.menu li {
+#nav ul.menu li {
   display: block;
   padding: 0;
   margin: 0;
   float: left;
 }
 
-ul.menu li a {
+#nav ul.menu li a {
   display: block;
   padding: 1em 2em;
   color: #FFF;
@@ -248,10 +248,10 @@ ul.menu li a {
   text-decoration: none;
 }
 
-ul.menu li:last-child a {
+#nav ul.menu li:last-child a {
   border-right: none;
 }
 
-ul.menu li a:hover {
+#nav ul.menu li a:hover {
   background: #C2CF29;
 }

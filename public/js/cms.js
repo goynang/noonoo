@@ -180,21 +180,25 @@ var cms = function() {
 				containment: "parent",
 				autoHide: true,
 				handles: "e",
-				grid: [columnWidth, 1], // TODO: wrong if page changes size (e.g. panel open) after init
+				grid: [columnWidth, 1],
 				start: function(e, ui) {
+					columnWidth = (zone.width() / 12);
+					ui.element.resizable( "option", "grid", [columnWidth, 1] );
 					var widthIndicator = $('<div class="width"></div>');
 					ui.element.append(widthIndicator);
 					zone.addClass('resizing');
+					ui.element.addClass('current');
 				},
 				resize: function(e, ui) {
 					var columns = 1.0 * ui.element.width() / columnWidth;
-					columns = columns | 0; // convert to int
+					columns = Math.round(columns * 10) / 10; // convert to int
 					ui.element.find('.width').text(columns + '/12');
 				},
 				stop: function(e, ui) {
 					zone.removeClass('resizing');
+					ui.element.removeClass('current');
 					var columns = 1.0 * ui.element.width() / columnWidth;
-					columns = columns | 0; // convert to int
+					columns = Math.round(columns * 10) / 10; // convert to int
 					ui.element.removeClass('span1 span2 span3 span4 span5 span6 span7 span8 span9 span10 span11 span12');
 					ui.element.removeAttr('style');
 					ui.element.addClass('span' + columns);
@@ -260,9 +264,10 @@ var cms = function() {
 		
 		// Handle inspector based changes
 		$('#cms_inspector').on('blur', 'input', function() {
-			var n = $(this).attr('name');
+			var n = 'data-prop-' + $(this).attr('name');
 			var v = $(this).val();
-			currentElement.find('[data-inspectable=true]').attr(n, v);
+			currentElement.find('['+n+']').attr(n, v);
+			// TODO: XHR rerender component?
 			pageChanged();
 		});
 		
@@ -281,6 +286,7 @@ var cms = function() {
 	
 	function serialisePage() {
 		var page = {};
+		var cleanName;
 		page.path = window.location.pathname;
 		page.title = $('#cms_this_page_title').val();
 		page.label = $('#cms_this_page_label').val();
@@ -292,10 +298,21 @@ var cms = function() {
 			$(zoneElement).find('.component').each(function(component_index, componentElement) {
 				var component = {};
 				component.name = $(componentElement).attr('itemtype');
-				component.klass = $(componentElement).attr('class');
+				component.klass = $(componentElement).attr('class').replace(/(ui-.*)/g, '').trim();
+				// Find itemprops
 				$(componentElement).find('[itemprop]').each(function(i, e) {
 					component[$(e).attr('itemprop')] = $.trim($(e).html());
 				});
+				// Find data-props
+				$(componentElement).find('.content').find('*').each(function() {
+					$.each(this.attributes, function() {
+						if(this.specified && this.name.indexOf('data-prop-') === 0) {
+							cleanName = this.name.replace('data-prop-','');
+							component[cleanName] = this.value;
+						}
+					});
+				});
+
 				zone.push(component);
 			});
 			if ($(zoneElement).hasClass('template-zone')) {
@@ -314,17 +331,17 @@ var cms = function() {
 		var $fieldPrototype = $('<p><label></label><input type="text" name="" value=""></p>');
 		var $fields = $('<div></div>');
 		var $inspector = $('#cms_inspector div');
-		var swap = false;
+		var cleanName;
 		$('#cms_inspector legend span').text(element.attr('itemtype').capitalize());
 		// TODO: this doesn't really deal with multiple elements properly
-		element.find('[data-inspectable=true]').each(function() {
+		element.find('.content').find('*').each(function() {
 			$.each(this.attributes, function() {
-				if(this.specified && this.name != 'data-inspectable' && this.name != 'class') {
-					$fieldPrototype.find('label').text(this.name.replace('data-',''));
-					$fieldPrototype.find('input').attr('name', this.name);
+				if(this.specified && this.name.indexOf('data-prop-') === 0) {
+					cleanName = this.name.replace('data-prop-','');
+					$fieldPrototype.find('label').text(cleanName);
+					$fieldPrototype.find('input').attr('name', cleanName);
 					$fieldPrototype.find('input').attr('value', this.value);
 					$fields.append($fieldPrototype.clone());
-					swap = true;
 				}
 			});
 		});
