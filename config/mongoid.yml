@@ -1,26 +1,18 @@
 development:
-  sessions:
+  clients:
     default:
       database: noonoo
       hosts:
         - localhost:27017
-      options:
-        consistency: strong
 
 test:
-  sessions:
+  clients:
     default:
       database: noonootest
       hosts:
         - localhost:27017
-      options:
-        consistency: strong
 
 production:
-  sessions:
+  clients:
     default:
       uri: <%= ENV['MONGODB_URI'] %>
-      options:
-        skip_version_check: true
-        safe: true
-        consistency: strong

@@ -4,4 +4,4 @@ gem 'unicorn'
 gem 'sinatra'
 gem 'sinatra-contrib'
 gem 'json'
-gem "mongoid", "~> 3.1.6"
+gem "mongoid", "~> 5.2.0"

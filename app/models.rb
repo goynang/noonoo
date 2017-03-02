@@ -42,7 +42,7 @@ module NooNoo
       has_many :pages
   
       field :title, :type => String
-      field :zones, :type => Array
+      field :zones, :type => Hash
     end
 
     class Component
