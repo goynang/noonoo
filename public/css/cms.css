@@ -1,8 +1,8 @@
 .page-zone,
 .template-zone {
-  outline-color: #090;
-  outline-style: dotted;
-  outline-offset: 0.2em;
+  outline-color: rgba(0,255,0, 0.33);
+  outline-style: solid;
+  outline-offset: 0.15em;
   outline-width: 0;
   position: relative;
   overflow: visible;
@@ -16,7 +16,7 @@
 }
 
 .template-zone {
-  outline-color: #900;
+  outline-color: rgba(255,0,0, 0.33);
 }
 
 .template-zone:after,
@@ -43,6 +43,8 @@ div.shown:before {
   right: -0.2em;
   line-height: 1em;
   z-index: 51;
+  text-transform: uppercase;
+  opacity: 0.33;
 }
 
 body.showing-template-zones .template-zone:before {
@@ -53,7 +55,8 @@ div.component.shown:before {
   background: #009;
   content: attr(itemtype);
   right: auto;
-  left: -0.2em;
+  left: 0;
+  top: 0;
   border-radius: 0 0 3px 0;
 }
 
@@ -189,7 +192,7 @@ html.cms {
 }
 
 html.cms body {
-  margin: 1em;
+
 }
 
 #cms_ui {
@@ -401,7 +404,7 @@ html.cms #cms_ui {
     color: #CCC;
     border-radius: 5px;
     background: #F8F8F8;
-    border: 2px dotted #DDD;
+    border: 2px solid #DDD;
   }
   
 #cms_ui .cms_components,

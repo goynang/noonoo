@@ -19,10 +19,15 @@ module NooNoo
       }
     end
     
-    def render_page(page, request)
-      content = parse_content(page, request)
+    def render_page(page, params)
+      content = parse_content(page, params)
       # TODO: make the template to load dynamic from the page object (rather than hardcoding this as :page)
-      erb :page, locals: {page: page, content: content}
+      
+      if request.xhr?
+       erb :page, layout: false, locals: {page: page, content: content}
+      else 
+         erb :page, locals: {page: page, content: content} 
+      end
     end
 
     def parse_content(page, request)

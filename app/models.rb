@@ -1,10 +1,19 @@
 require 'mongoid'
+require 'mongoid/history'
+
+Mongoid.raise_not_found_error = false
 
 module NooNoo
   module Models
+    class HistoryTracker
+      include Mongoid::History::Tracker
+    end
+    
     class Page
       include Mongoid::Document
-      
+      include Mongoid::Timestamps
+      include Mongoid::History::Trackable
+            
       store_in collection: "pages"
   
       belongs_to :layout
@@ -25,6 +34,8 @@ module NooNoo
       
       accepts_nested_attributes_for :layout
       
+      track_history on: [:fields, :embedded_relations] 
+      
       before_create do |page|
         self.depth = self.path.split('/').size - 1 unless self.depth
       end
@@ -36,6 +47,8 @@ module NooNoo
 
     class Layout
       include Mongoid::Document
+      include Mongoid::Timestamps
+      
       
       store_in collection: "layouts"
   
@@ -47,6 +60,7 @@ module NooNoo
 
     class Component
       include Mongoid::Document
+      include Mongoid::Timestamps
       
       store_in collection: "components"
         

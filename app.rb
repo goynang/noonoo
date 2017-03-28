@@ -1,4 +1,6 @@
 require 'sinatra/base'
+require 'faye'
+require 'faye/redis'
 
 require_relative 'app/config'
 require_relative 'app/helpers'
@@ -9,6 +11,12 @@ module NooNoo
   class App < Sinatra::Application
   
     set :app_file, __FILE__
+    
+    use Faye::RackAdapter, :mount => '/pubsub', :timeout => 25, :engine  => {
+        :type  => Faye::Redis,
+        :host  => 'localhost',
+        :port  => 6379
+      }
     
     helpers NooNoo::Helpers
     

@@ -1,7 +1,7 @@
 noonoo
 ======
 
-Adventures in Ruby, Sinatra, <del>CouchDB</del> Mongo, Javascript, HTML5 Microdata, and JSON. With socket.io to follow!
+Adventures in Ruby, Sinatra, <del>CouchDB</del> Mongo, Redis, Web Sockets, Javascript, HTML5 Microdata, and JSON.
 
 A little web site editor (don't you dare say CMS) based on pages, components, templates, and maybe some other stuff in time.
 
@@ -32,13 +32,17 @@ You'll also need Mongo installed and running. This is configured via config/mong
 
         $ mongod
 
+Redis as well...
+
+        $ redis-server 
+
 Then to start up the app use foreman (which will fire the Unicorn server up)...
 
         $ foreman start
 
 If everything is working you should now be able to see it at http://0.0.0.0:5000
 
-Everything is Heroku friendly (assuming you have the MongoHQ database add-on ready to go).
+Everything is Heroku friendly (assuming you have mongo and redis enabled).
 
 The masterplan
 --------------
@@ -59,11 +63,9 @@ The masterplan
 Tools, libraries, and what not to think about using
 ---------------------------------------------------
 
-* Knockout.js to simplify the data-binding needs (or maybe something like react?)
-* WebComponents (standard stuff rather than custom stuff) or Knockout.js 3.2's components?
-* Socket.io for real time coolness (or something via knockout.js or similar?)
+* WebComponents (standard stuff rather than custom stuff)?
 * Native JS to replace jQuery where possible (or maybe zepto.js?) - what about jQueryUI?
-* Radius for simpler templating (bit like JSP action files)
+* React? Vue? Angular?
 
 TODOs
 -----
@@ -76,8 +78,111 @@ TODOs
 * Inter-element communication (some kind of shared scope thing?) - classic e.g. filter and list
 * Caching?!? How (for e.g.) avoid going to CRM API on every page load?
 * How allow elements to do more than just display content? How allow input? e.g. update user details form
+* Allow env settings for DB config etc.
 
 Woe
 ---
 
 Need a much better way of wiring interface elements that allow you to change the state of the page to the things that are affected by them. Otherwise it will become a big jumble of jQuery selectors to keep everything in sync - if it isn't already. Is there way react.js could help (or something similar)?
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Component
+    server side
+        persist state
+        load state
+        render
+        publish state changes (to listening clients)
+    client side
+        instantiate
+        render (AJAX proxy to server render OR client side template stuff?)
+        handle inspector based state changes
+        trigger persist state
+        subscribe to state changes (from server side)
+        
+        
+        
+Client change <-> Server <-> Other clients
+
+
+Inspector -> re-render (client or server side?) -> component 
+Component -> save state (server side) -> update inspector
+
+
+Local data proxy for state (push to server to publish changes?)
+
+
+
+
+
+
+
+THOUGHTS...
+
+Component DIR structure
+
+my-great-component
+    model.rb
+    view.erb
+    model.js
+    inspect.erb
+    
+
+model.rb
+
+module NooNoo
+  module Components
+    class Menu
+      def self.render
+          ...
+          {page: page, component: component, xxx: yyyy}
+      end
+    end
+  end
+end
+
+view.erb
+
+<div data-prop-foo="<%= xxx.some_prop %>" itemprop="content"><%= xxx.content %></div>
+
+implied data model
+
+foo=
+content=
+
+Need to update JS page serialiser to allow for data-prop-* attributes.
+
+Make it only serialise data-prop-* and itemprop values. Whitelist!
+
+Global XHR route to allow server side rendering of components for injection into page
+
+1. Change inspector value
+2. Pass arguments to server (data-props and itemprops)
+3. Save state in database (patch the page document)
+4. Get HTML fragment back
+5. Inject into page replacing original
+
+Maybe defer page saves until push big "publish changes" button (so can work in draft?).
+
+How about something like "submit changes" as well for pushing through workflow?
+
+How deal with people not pushing one of those buttons and just (accidently?) leaving page (nag alert?)?
+
+Will XHR be quick enough on inspector change (or too many XHRs if several fields in inspector)?
+
+Can a component state if needs server side render and only use client side when safe to do so?
+
+When OK to relay on "update" button rather than real time rendering?

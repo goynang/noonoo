@@ -2,11 +2,27 @@ String.prototype.capitalize = function() {
 	return this.charAt(0).toUpperCase() + this.slice(1);
 };
 
+String.prototype.hashCode = function() {
+  var hash = 0, i, chr;
+  if (this.length === 0) return hash;
+  for (i = 0; i < this.length; i++) {
+    chr   = this.charCodeAt(i);
+    hash  = ((hash << 5) - hash) + chr;
+    hash |= 0; // Convert to 32bit integer
+  }
+  return hash;
+};
+
 var cms = function() {
 	
 	// Private variables
 
-	var $this = this, currentElement = null, needsSave = false;
+	var $this = this, currentElement = null, clientID = null, pubSubClient = null;
+	
+	var saveSave = debounce(function() {
+		console.log('Save!');
+		savePage(serialisePage());
+	}, 1000);
 	
 	// Private functions
 	
@@ -17,27 +33,20 @@ var cms = function() {
 				disableReturn: true,
 				cleanPastedHTML: true,
 				buttonLabels: 'fontawesome',
-				buttons: ['bold', 'italic', 'anchor', 'strikethrough'],
-			}
-		);
-		
-		inlineEditor = new MediumEditor(
-			'[data-editor="block"]',
-			{
-				cleanPastedHTML: true,
-				buttonLabels: 'fontawesome',
-				buttons: ['bold', 'italic', 'anchor', 'strikethrough'],
+				toolbar: {
+					buttons: ['bold', 'italic', 'anchor', 'strikethrough']
+				}
 			}
 		);
 		
 		blockEditor = new MediumEditor(
-			'[data-editor="full"]',
+			'[data-editor="block"]',
 			{
 				cleanPastedHTML: true,
 				buttonLabels: 'fontawesome',
-				buttons: ['header1', 'header2', 'orderedlist', 'unorderedlist', 'bold', 'italic', 'anchor', 'strikethrough'],
-				firstHeader: 'h2',
-				secondHeader: 'h3'
+				toolbar: {
+					buttons: ['justifyLeft', 'justifyCenter', 'bold', 'italic', 'anchor', 'strikethrough']
+				}
 			}
 		);
 	}
@@ -48,6 +57,21 @@ var cms = function() {
 	
 	function revealCMS() {
 		$('#cms_ui').delay(500).fadeIn(1000);
+	}
+	
+	function initPubSub() {
+		pubSubClient = new Faye.Client('/pubsub');
+		var channelName = (location.pathname === '/') ? '/ROOT' : location.pathname;
+		var subscription = pubSubClient.subscribe('/changes' + channelName, function(message) {
+			var viewport = document.getElementById('viewport');
+			var incoming = document.createElement('div');
+			incoming.id = 'viewport';
+			incoming.innerHTML = message.html;
+			if ($this.clientID != message.clientID) {
+				morphdom(viewport, incoming);
+				setupEditors();
+			}
+		});
 	}
 	
 	function showPageZones() {
@@ -100,43 +124,56 @@ var cms = function() {
 	}
 	
 	function pageChanged() {
-		needsSave = true;
-		savePage(serialisePage());
+		saveSave.apply();
+	}
+	
+	function renderPage() {
+		console.log('renderPage');
+		// $.get(location.pathname, function(data) {
+			// $('#viewport').replaceWith(data);
+			// refresh();
+		// });
+	}
+	
+	function debounce(func, wait, immediate) {
+		var timeout;
+		return function() {
+			var context = this, args = arguments;
+			var later = function() {
+				timeout = null;
+				if (!immediate) func.apply(context, args);
+			};
+			var callNow = immediate && !timeout;
+			clearTimeout(timeout);
+			timeout = setTimeout(later, wait);
+			if (callNow) func.apply(context, args);
+		};
 	}
 	
 	function loadStyles() {
 		// FontAwesome for icons etc.
-		$('<link>').appendTo('head').attr({type : 'text/css', rel : 'stylesheet'}).attr('href', '//netdna.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css');
+		$('<link>').appendTo('head').attr({type : 'text/css', rel : 'stylesheet'}).attr('href', '//netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css');
 		// Main CMS UI styles...
 		$('<link>').appendTo('head').attr({type : 'text/css', rel : 'stylesheet'}).attr('href', '/css/cms.css');
 		// Styles used by editor (context pop-ups etc.)...
 		$('<link>').appendTo('head').attr({type : 'text/css', rel : 'stylesheet'}).attr('href', '/vendor/medium-editor.min.css');
 	}
 	
-	function registerEventListeners() {
+	function registerCMSEventListeners() {
 		
 		// Toggle CMS panels
 		$('#cms_ui .toggle').on('click', function() {
 			$('html').toggleClass('cms');
 		});
 		
+		// Preview on device
 		$('#cms_preview_device').on('change', function() {
 			previewAs($(this).val());
-		});
-		
-		// Save page upon change to component content via input (i.e. typing)
-		$('.component').on('input', function() {
-			pageChanged();
 		});
 		
 		// Set correct tab in toolbar
 		$('#cms_ui h2').on('click', function() {
 			openPanel( $(this).parents('.panel') );
-		});
-		
-		// Inspect components
-		$('.component').on('click', function() {
-			$this.inspect($(this));
 		});
 		
 		// Allow new components to be dragged onto page (into zones)
@@ -149,78 +186,7 @@ var cms = function() {
 			start: showGuides,
 			stop: hideGuides
 		});
-	
-		// Allow components to be sorted
-		$('.page-zone, .template-zone').sortable({
-			placeholder: 'block-placeholder',
-			handle: '.handle',
-			connectWith: '.page-zone, .template-zone',
-			tolerance: 'pointer',
-			update: function (event, ui) {
-				if (ui.item.attr('data-component') !== undefined) {
-					$.get('?component=' + ui.item.attr('data-component'), function(data) {
-						ui.item.replaceWith(data);
-						$this.refresh();
-						pageChanged();
-					});
-				}
-			},
-			start: showGuides,
-			stop: hideGuides
-		});
 		
-		// Allow components to be resized
-		$('.component').each(function() {
-			$element = $(this);
-			var zone = $element.parents('.page-zone, .template-zone');
-			var gutterWidth = 20; // Must match CSS
-			var containerWidth = zone.width();
-			var columnWidth = (containerWidth / 12);
-			$element.resizable({
-				containment: "parent",
-				autoHide: true,
-				handles: "e",
-				grid: [columnWidth, 1],
-				start: function(e, ui) {
-					columnWidth = (zone.width() / 12);
-					ui.element.resizable( "option", "grid", [columnWidth, 1] );
-					var widthIndicator = $('<div class="width"></div>');
-					ui.element.append(widthIndicator);
-					zone.addClass('resizing');
-					ui.element.addClass('current');
-				},
-				resize: function(e, ui) {
-					var columns = 1.0 * ui.element.width() / columnWidth;
-					columns = Math.round(columns * 10) / 10; // convert to int
-					ui.element.find('.width').text(columns + '/12');
-				},
-				stop: function(e, ui) {
-					zone.removeClass('resizing');
-					ui.element.removeClass('current');
-					var columns = 1.0 * ui.element.width() / columnWidth;
-					columns = Math.round(columns * 10) / 10; // convert to int
-					ui.element.removeClass('span1 span2 span3 span4 span5 span6 span7 span8 span9 span10 span11 span12');
-					ui.element.removeAttr('style');
-					ui.element.addClass('span' + columns);
-					ui.element.find('.width').remove();
-					pageChanged();
-				}
-			});
-		});
-		
-		// Style up editable components on hover (add drag handles etc.)
-		$('.component').on('mouseenter', function() {
-			$(this).find('.actions').show();
-		}).on('mouseleave', function() {
-			$(this).find('.actions').hide();
-		});
-		
-		// Remove a component from the page
-		$('.component').on('click', '.remove', function() {
-			$(this).parents('.component').remove();
-			pageChanged();
-		});
-			
 		// Hide/show content zones
 		$('#cms_show_page_zones').on('click', function() {
 			if ($(this).is(':checked')) {
@@ -258,8 +224,7 @@ var cms = function() {
 			
 			var page = {};
 			page.columns = columns;
-			needsSave = true;
-			savePage(page);
+			pageChanged();
 		});
 		
 		// Handle inspector based changes
@@ -269,6 +234,7 @@ var cms = function() {
 			currentElement.find('['+n+']').attr(n, v);
 			// TODO: XHR rerender component?
 			pageChanged();
+			renderPage();
 		});
 		
 		// Handle page info changes
@@ -277,11 +243,92 @@ var cms = function() {
 		});
 	}
 	
+	function registerComponentEventListeners() {
+
+		$('#viewport').on('input', '.component', function(){
+			pageChanged();
+		});
+
+		// Allow components to be sorted
+		$('.page-zone, .template-zone').sortable({
+			placeholder: 'block-placeholder',
+			handle: '.handle',
+			connectWith: '.page-zone, .template-zone',
+			tolerance: 'pointer',
+			update: function (event, ui) {
+				if (ui.item.attr('data-component') !== undefined) {
+					$.get('?component=' + ui.item.attr('data-component'), function(data) {
+						ui.item.replaceWith(data);
+						setupComponentResize(ui.item);
+						setupEditors();
+						pageChanged();
+					});
+				}
+			},
+			start: showGuides,
+			stop: hideGuides
+		});
+		
+		// Allow components to be resized
+		$('.component').each(setupComponentResize);
+		
+		// Style up editable components on hover (add drag handles etc.)
+		$('#viewport').on('mouseenter', '.component',function() {
+			$(this).find('.actions').show();
+		}).on('mouseleave', '.component', function() {
+			$(this).find('.actions').hide();
+		}).on('click', '.component .remove', function() {
+			$(this).parents('.component').remove();
+			pageChanged();
+		});
+	}
+	
 	function init() {
+		$this.clientID = ('' + Date.now()).hashCode();
 		loadStyles();
 		setupEditors();
-		registerEventListeners();
+		registerCMSEventListeners();
+		registerComponentEventListeners();
+		initPubSub();
 		revealCMS();
+	}
+	
+	function setupComponentResize(index, element) {
+		$element = $(element);
+		var zone = $element.parents('.page-zone, .template-zone');
+		var gutterWidth = 20; // Must match CSS
+		var containerWidth = zone.width();
+		var columnWidth = (containerWidth / 12);
+		$element.resizable({
+			containment: "parent",
+			autoHide: true,
+			handles: "e",
+			grid: [columnWidth, 1],
+			start: function(e, ui) {
+				columnWidth = (zone.width() / 12);
+				ui.element.resizable( "option", "grid", [columnWidth, 1] );
+				var widthIndicator = $('<div class="width"></div>');
+				ui.element.append(widthIndicator);
+				zone.addClass('resizing');
+				ui.element.addClass('current');
+			},
+			resize: function(e, ui) {
+				var columns = 1.0 * ui.element.width() / columnWidth;
+				columns = Math.round(columns * 10) / 10; // convert to int
+				ui.element.find('.width').text(columns + '/12');
+			},
+			stop: function(e, ui) {
+				zone.removeClass('resizing');
+				ui.element.removeClass('current');
+				var columns = 1.0 * ui.element.width() / columnWidth;
+				columns = Math.round(columns * 10) / 10; // convert to int
+				ui.element.removeClass('span1 span2 span3 span4 span5 span6 span7 span8 span9 span10 span11 span12');
+				ui.element.removeAttr('style');
+				ui.element.addClass('span' + columns);
+				ui.element.find('.width').remove();
+				pageChanged();
+			}
+		});
 	}
 	
 	function serialisePage() {
@@ -298,7 +345,7 @@ var cms = function() {
 			$(zoneElement).find('.component').each(function(component_index, componentElement) {
 				var component = {};
 				component.name = $(componentElement).attr('itemtype');
-				component.klass = $(componentElement).attr('class').replace(/(ui-.*)/g, '').trim();
+				component.klass = $(componentElement).attr('class').replace(/ui-.*?|resizable(-autohide)?|/g, '').replace(/ {2,}/, ' ').trim();
 				// Find itemprops
 				$(componentElement).find('[itemprop]').each(function(i, e) {
 					component[$(e).attr('itemprop')] = $.trim($(e).html());
@@ -349,11 +396,13 @@ var cms = function() {
 	};
 	
 	this.savePage = function(page) {
-		if (needsSave) {
-			$.post( page.path, { 'page' : JSON.stringify(page), '_method' : 'patch' }, "json" ).done(function( data ) {
-				needsSave = false;
-			});
-		}
+		$.post( page.path, { 'page' : JSON.stringify(page), '_method' : 'patch' }, "json" ).done(function( data ) {
+			var channelName = (page.path === '/') ? '/ROOT' : page.path;
+			var message = {};
+			message.html = $('#viewport').html();
+			message.clientID = $this.clientID;
+			pubSubClient.publish('/changes' + channelName, message);
+		});
 	};
 	
 	this.previewAs = function(what) {

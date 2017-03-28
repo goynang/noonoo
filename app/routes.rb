@@ -5,6 +5,8 @@ module NooNoo
   class App < Sinatra::Application
 
     set :session_secret, 'notasecret'
+    
+    pubSubClient = Faye::Client.new("http://0.0.0.0:5000/pubsub")
 
     # Handle creating a new page
     # Params passed in should represent the page to create (title, layout)
@@ -38,8 +40,18 @@ module NooNoo
     # TODO: Add auth
     patch "*" do
       content_type :json
-      page = Page.find_by(path: params[:splat].join('/').to_s)
+      path = params[:splat].join('/').to_s
+      page = Page.find_by(path: path)
+      halt 404 unless page
+      
+      # TODO: determine HTML diff here and only publish that back to the browser ???
+      # TODO: Deal with stuff outside of viewport (like body style for columns)
+      
       page.update_attributes(JSON.parse(params['page']))
+        
+      # Publish here or via cms.js save code????
+      # pubSubClient.publish('/changes' + path, render_page(page, params))
+      
       page.to_json
     end
 
@@ -52,6 +64,10 @@ module NooNoo
       page = Page.find_by(path: params[:splat].join('/').to_s)
       page.destroy
       redirect '/?deleted=true'
+    end
+    
+    not_found do
+      'Page not found (TODO: make this prettier or even CMS editable!)'
     end
 
   end

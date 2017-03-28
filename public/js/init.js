@@ -20,7 +20,9 @@
 	loadScript("//code.jquery.com/jquery-1.11.0.min.js", function() {
 		loadScript("/vendor/jquery-ui-1.10.4.custom.min.js", function() {
 			loadScript("/vendor/medium-editor.min.js", function() {
-				loadScript("/js/cms.js", function() {});
+				loadScript("/vendor/morphdom-min.js", function() {
+					loadScript("/js/cms.js", function() {});
+				});
 			});
 		});
 	});

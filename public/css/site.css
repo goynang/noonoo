@@ -1,5 +1,5 @@
 body {
-  padding: 6em 4em 2em 4em;
+  padding: 0 4em;
   margin: 0;
   font-family: "Gill sans", arial, sans-serif;
   background: #FFF;
@@ -7,15 +7,11 @@ body {
 
 #viewport {
   background: #FFF;
+  
 }
 
 #nav {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  padding: 0;
-  z-index: 50;
+
 }
 
 .page-zone,
@@ -72,9 +68,9 @@ body.columns-3 #tertiary {
 
 .component {
   position: relative;
-  outline-color: #009;
-  outline-style: dotted;
-  outline-offset: 2px;
+  outline-color: rgba(0,0,255, 0.33);
+  outline-style: solid;
+  outline-offset: 0;
   outline-width: 0;
   margin: 0;
   padding: 0;
@@ -83,8 +79,17 @@ body.columns-3 #tertiary {
   float: none;
 }
 
+.component[itemtype=menu] {
+  margin: 0 -4em;
+}
+
 .component .content {
   padding: 10px;
+}
+
+img {
+  width: 100%;
+  max-width: 100%;
 }
 
 .span1,
