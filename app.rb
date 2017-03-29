@@ -14,10 +14,11 @@ module NooNoo
     
     use Faye::RackAdapter, :mount => '/pubsub', :timeout => 25, :engine  => {
         :type  => Faye::Redis,
-        :host  => 'localhost',
-        :port  => 6379
+        :host  => ENV['REDIS_HOST'] || 'localhost',
+        :port  => ENV['REDIS_PORT'] || 6379,
+        :password => ENV['REDIS_PASSWORD'] || ''
       }
-    
+
     helpers NooNoo::Helpers
     
     # If we have no pages then intialise the system (so is usable!)
