@@ -6,7 +6,7 @@ module NooNoo
 
     set :session_secret, 'notasecret'
     
-    pubSubClient = Faye::Client.new("http://0.0.0.0:5000/pubsub")
+    # pubSubClient = Faye::Client.new("http://0.0.0.0:5000/pubsub")
 
     # Derermine correct site to load
     # Load it in so available elsewhere
