@@ -9,6 +9,22 @@ module NooNoo
       include Mongoid::History::Tracker
     end
     
+    class Site
+      include Mongoid::Document
+      include Mongoid::Timestamps
+      include Mongoid::History::Trackable
+      
+      store_in collection: "sites"
+      
+      field :title, type: String
+      field :description, type: String
+      field :theme, type: String, default: -> { 'default' }
+      field :tracking_code, type: String
+      
+      field :status, type: String, default: -> { 'dev' }
+      field :domains, type: Array, default: -> { ['0.0.0.0'] }
+    end
+    
     class Page
       include Mongoid::Document
       include Mongoid::Timestamps
@@ -17,6 +33,7 @@ module NooNoo
       store_in collection: "pages"
   
       belongs_to :layout
+      belongs_to :site
     
       field :title, type: String
       field :label, type: String, default: -> { self.title }

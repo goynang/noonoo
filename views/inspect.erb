@@ -1,0 +1,7 @@
+<div><% props.each do |prop| %>
+<p>
+	<label for="inspect_<%= prop[:name] %>"><%= prop[:label] %></label>
+	
+	<%= erb ('inspect.' + prop[:type]).to_sym, locals: prop %>
+</p><% end %>
+</div>

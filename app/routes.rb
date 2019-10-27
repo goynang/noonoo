@@ -8,6 +8,33 @@ module NooNoo
     
     pubSubClient = Faye::Client.new("http://0.0.0.0:5000/pubsub")
 
+    # Derermine correct site to load
+    # Load it in so available elsewhere
+    before do
+      @site = Site.find_by(domains: request.host)
+      halt 404 unless @site
+    end
+    
+    # TODO: authorisation!
+    
+    patch "/@/site" do
+      # TODO: update current site record with params
+      redirect params[:return] || '/' # TODO: ensure on same domain etc.
+    end
+    
+    get '/@/inspect/:component' do
+      component = params[:component]
+      filename = "components/#{component}/#{component}.rb"
+      if File.file?(filename)
+        require_relative '../' + filename
+        component_class = Object.const_get("NooNoo::Components::#{component.capitalize}")
+        erb(:inspect, {
+          layout: nil,
+          locals: {props: component_class.props}
+        })
+      end
+    end
+
     # Handle creating a new page
     # Params passed in should represent the page to create (title, layout)
     # Upon success get redirected to freshly created page

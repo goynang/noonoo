@@ -248,6 +248,14 @@ var cms = function() {
 		$('#viewport').on('input', '.component', function(){
 			pageChanged();
 		});
+		
+		$('#viewport').on('click', '.component', function(){
+			inspect($(this));
+		});
+
+		$('#viewport').on('click', function(){
+			resetInspector();
+		});
 
 		// Allow components to be sorted
 		$('.page-zone, .template-zone').sortable({
@@ -375,24 +383,19 @@ var cms = function() {
 	
 	this.inspect = function(element) {
 		currentElement = element;
-		var $fieldPrototype = $('<p><label></label><input type="text" name="" value=""></p>');
-		var $fields = $('<div></div>');
-		var $inspector = $('#cms_inspector div');
-		var cleanName;
-		$('#cms_inspector legend span').text(element.attr('itemtype').capitalize());
-		// TODO: this doesn't really deal with multiple elements properly
-		element.find('.content').find('*').each(function() {
-			$.each(this.attributes, function() {
-				if(this.specified && this.name.indexOf('data-prop-') === 0) {
-					cleanName = this.name.replace('data-prop-','');
-					$fieldPrototype.find('label').text(cleanName);
-					$fieldPrototype.find('input').attr('name', cleanName);
-					$fieldPrototype.find('input').attr('value', this.value);
-					$fields.append($fieldPrototype.clone());
-				}
-			});
+		$.get( '/@/inspect/' + element.attr('itemtype')).done(function(data) {
+			var $inspector = $('#cms_inspector div');
+			if (data !== '') {
+				$inspector.replaceWith(data);
+			} else {
+				resetInspector();
+			}
 		});
-		$inspector.replaceWith($fields);
+	};
+	
+	this.resetInspector = function() {
+		var $inspector = $('#cms_inspector div');
+		$inspector.replaceWith('<div class="empty">Click an element on your page to see its details here</div>');
 	};
 	
 	this.savePage = function(page) {

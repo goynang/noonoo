@@ -345,10 +345,12 @@ html.cms #cms_ui {
 #cms_ui div.inner {
   padding: 1em;
   display: none;
+  z-index: 1;
 }
 
 #cms_ui div.active div.inner {
   display: block;
+  z-index: 5;
 }
 
 #cms_ui h2 {
@@ -395,7 +397,8 @@ html.cms #cms_ui {
   margin: 0 0 0.5em 0;
 }
 
-#cms_ui #cms_inspector {
+#cms_inspector {
+  
 }
 
   #cms_ui #cms_inspector .empty {
@@ -406,6 +409,7 @@ html.cms #cms_ui {
     background: #F8F8F8;
     border: 2px solid #DDD;
   }
+
   
 #cms_ui .cms_components,
 #cms_ui .columns {

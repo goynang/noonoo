@@ -62,11 +62,9 @@ module NooNoo
       if File.file?(filename)
         require_relative '../' + filename
         renderer = Object.const_get("NooNoo::Components::#{component.name.capitalize}")
-        # if renderer.responds_to? :render
+        if renderer.respond_to? :render
           locals = renderer.render(component, page, request)
-        # else
-        #  raise "Attempt to render component object that doesn't implement render method: #{component.name}"
-        # end    
+        end
       end
       
       erb(:view, {

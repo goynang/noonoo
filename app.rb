@@ -21,6 +21,10 @@ module NooNoo
 
     helpers NooNoo::Helpers
     
+    if NooNoo::Models::Site.empty?
+      NooNoo::Models::Site.create({title: 'Example site'})
+    end
+    
     # If we have no pages then intialise the system (so is usable!)
     # Rather messy but will do for now...
     if NooNoo::Models::Page.empty?

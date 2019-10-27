@@ -38,6 +38,7 @@
 				<li data-component="menu"><span><i class="fa fa-bars"></i> Menu</span></li>
 				<li data-component="sitemap"><span><i class="fa fa-sitemap"></i> Sitemap</span></li>
 				
+				<li data-component="container"><span><i class="fa fa-columns"></i> Container</span></li>
 				<li data-component="comments"><span><i class="fa fa-comment"></i> Comments</span></li>
 
 			</ol>
@@ -123,7 +124,7 @@
 		<h2>Site</h2>
 		
 		<div class="inner">
-		<form id="cms_site" method="post" action="/new">
+		<form id="cms_site" method="post" action="/@/site">
 			<fieldset>
 				<legend><span>Details</legend>
 			
@@ -137,13 +138,38 @@
 						<label for="cms_site_description">Description</label>
 						<textarea name="description" id="cms_site_description"></textarea>
 					</p>
-				
+					
+					<p>
+						<label for="cms_status">Status</label>
+						<select name="status" id="cms_status">
+							<option value="dev">Development</option>
+							<option value="live">Live</option>
+							<option value="down">Down for maintenance</option>
+						</select>
+					</p>
+					
 					<p>
 						<label for="cms_site_theme">Theme</label>
-						
+						<select name="theme" id="cms_site_theme">
+							<option value="default">Default</option>
+							<option value="membership">Membership</option>
+							<option value="charity">Charity</option>
+							<option value="association">Association</option>
+							<option value="tradeunion">Trade Union</option>
+							<option value="royalcollege">Royal College</option>
+							<option value="regulator">Regulator</option>
+							<option value="commercial">Commercial</option>
+						</select>
+					</p>
+					
+					<p>
+						<label for="cms_tracking_code">Tracking code</label>
+						<textarea name="tracking_Code" id="cms_tracking_code"></textarea>
 					</p>
 				
 					<p>
+						<input type="hidden" name="return" value="<%= request.path %>">
+						<input type="hidden" name="_method" value="patch">
 						<input type="submit" value="Update">
 					</p>
 				</div>
