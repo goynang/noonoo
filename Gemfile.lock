@@ -43,7 +43,7 @@ GEM
       em-hiredis (>= 0.2.0)
       eventmachine (>= 0.12.0)
       multi_json (>= 1.0.0)
-    faye-websocket (0.10.9)
+    faye-websocket (0.11.0)
       eventmachine (>= 0.12.0)
       websocket-driver (>= 0.5.1)
     hiredis (0.6.3)
@@ -103,11 +103,11 @@ GEM
     tilt (2.0.10)
     tzinfo (1.2.5)
       thread_safe (~> 0.1)
-    websocket-driver (0.7.1)
+    websocket-driver (0.7.3)
       websocket-extensions (>= 0.1.0)
-    websocket-driver (0.7.1-java)
+    websocket-driver (0.7.3-java)
       websocket-extensions (>= 0.1.0)
-    websocket-extensions (0.1.4)
+    websocket-extensions (0.1.5)
 
 PLATFORMS
   java
